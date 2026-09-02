@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Aviat Investment Limited — Website
 
-## Getting Started
+Next.js (App Router) rebuild of the Aviat Investment Limited site, with Supabase for
+content, form submissions, and admin auth, deployed on Vercel.
 
-First, run the development server:
+## Stack
+
+- **Next.js 16** (App Router, TypeScript, Server Actions)
+- **Tailwind CSS v4**
+- **Supabase** — Postgres (services + quote requests), Auth (admin login), Storage (optional)
+- **Vercel** — hosting
+
+## Pages
+
+- `/` — home (hero, why-choose-us, services preview, quote form)
+- `/about` — company info
+- `/services` — full services list
+- `/contact` — contact details + quote form
+- `/admin` — quote request inbox (requires Supabase Auth login)
+- `/admin/services` — manage services shown on the site
+- `/admin/login` — admin sign-in
+
+## 1. Local setup
 
 ```bash
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The site renders with built-in placeholder content (`src/lib/seed-services.ts`) even
+without Supabase configured — the quote form just won't be able to save submissions
+until it's connected.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 2. Connect Supabase
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Create a project at [supabase.com](https://supabase.com).
+2. In **Project Settings -> API**, copy the **Project URL** and **anon public key**
+   into `.env.local`:
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=...
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+   ```
+3. Open the **SQL Editor** in the Supabase dashboard, paste the contents of
+   [`supabase/schema.sql`](supabase/schema.sql), and run it. This creates:
+   - `services` — editable content for the Home/Services pages (seeded with the
+     current six services)
+   - `quote_requests` — submissions from the "Request a Service Quote" form
+   - Row Level Security policies (public can read active services and submit quote
+     requests; only signed-in admins can read submissions or manage services)
+4. Create an admin login: **Authentication -> Users -> Add user** (email + password).
+   There is no public sign-up — only accounts created here can access `/admin`.
 
-## Learn More
+## 3. Deploy to Vercel
 
-To learn more about Next.js, take a look at the following resources:
+1. Push this repo to GitHub/GitLab/Bitbucket.
+2. Import it at [vercel.com/new](https://vercel.com/new).
+3. Add the same two environment variables from `.env.local` in the Vercel project's
+   **Settings -> Environment Variables**.
+4. Deploy.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Content still to fill in
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Contact details**: phone, email, and address in `src/lib/constants.ts`
+  (`CONTACT`) are placeholders — replace with the real ones.
+- **Photography**: the hero and banner sections currently use CSS gradients as
+  stand-ins for aircraft photography. Drop real images into `public/images/` and
+  swap them into `src/app/page.tsx` (and `about`/`services` if desired).
