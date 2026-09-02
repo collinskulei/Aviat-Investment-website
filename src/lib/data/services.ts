@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { SEED_SERVICES } from "@/lib/seed-services";
 import type { Service } from "@/lib/types";
@@ -7,7 +7,7 @@ import type { Service } from "@/lib/types";
 export async function getActiveServices(): Promise<Service[]> {
   if (!isSupabaseConfigured) return SEED_SERVICES;
 
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data, error } = await supabase
     .from("services")
     .select("*")
