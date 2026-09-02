@@ -36,8 +36,8 @@ yarn-error.log*
 # vercel
 .vercel
 
-# foglamp (contains a secret edit token)
-.foglamp/
+# local codebase map (generated report, not source)
+.codemap/
 
 # typescript
 *.tsbuildinfo
