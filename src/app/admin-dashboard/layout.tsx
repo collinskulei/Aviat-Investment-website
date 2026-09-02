@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { logout } from "@/app/admin/login/actions";
+import { logout } from "@/app/aviat-admin/actions";
 
 // Admin pages depend on the signed-in user's session; never prerender them.
 export const dynamic = "force-dynamic";
@@ -17,14 +17,14 @@ function AdminNav() {
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 border-b border-card-border pb-6">
       <div className="flex items-center gap-6">
-        <Link href="/admin" className="text-lg font-bold">
+        <Link href="/admin-dashboard" className="text-lg font-bold">
           Admin Dashboard
         </Link>
         <nav className="flex gap-4 text-sm">
-          <Link href="/admin" className="text-muted hover:text-foreground">
+          <Link href="/admin-dashboard" className="text-muted hover:text-foreground">
             Quote Requests
           </Link>
-          <Link href="/admin/services" className="text-muted hover:text-foreground">
+          <Link href="/admin-dashboard/services" className="text-muted hover:text-foreground">
             Services
           </Link>
         </nav>

@@ -18,9 +18,9 @@ content, form submissions, and admin auth, deployed on Vercel.
 - `/services` — full services list
 - `/services/[slug]` — individual service detail page
 - `/contact` — contact details + quote form (add `?service=Name` to preselect it)
-- `/admin` — quote request inbox (requires Supabase Auth login)
-- `/admin/services` — manage services shown on the site
-- `/admin/login` — admin sign-in
+- `/admin-dashboard` — quote request inbox (requires Supabase Auth login)
+- `/admin-dashboard/services` — manage services shown on the site
+- `/aviat-admin` — admin sign-in (has a temporary "Demo credentials" note — see below)
 
 ## 1. Local setup
 
@@ -51,7 +51,9 @@ until it's connected.
    - Row Level Security policies (public can read active services and submit quote
      requests; only signed-in admins can read submissions or manage services)
 4. Create an admin login: **Authentication -> Users -> Add user** (email + password).
-   There is no public sign-up — only accounts created here can access `/admin`.
+   There is no public sign-up — only accounts created here can access `/admin-dashboard`.
+   To make the login page's "Demo credentials" note actually work, create the user
+   with those exact values (see `src/app/aviat-admin/LoginForm.tsx`).
 
 ## 3. Deploy to Vercel
 
@@ -68,3 +70,6 @@ until it's connected.
 - **Photography**: the hero and banner sections currently use CSS gradients as
   stand-ins for aircraft photography. Drop real images into `public/images/` and
   swap them into `src/app/page.tsx` (and `about`/`services` if desired).
+- **Demo credentials**: `/aviat-admin` shows a collapsible "Demo credentials" note
+  for reviewing this build. Remove it from `src/app/aviat-admin/LoginForm.tsx`
+  once real admin access is set up.

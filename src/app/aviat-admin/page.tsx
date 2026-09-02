@@ -13,7 +13,7 @@ export default async function LoginPage({
         <h1 className="text-xl font-bold">Admin Sign In</h1>
         <p className="mt-1 text-sm text-muted">Aviat Investment Limited admin dashboard.</p>
         <div className="mt-6">
-          <LoginForm next={next ?? "/admin"} />
+          <LoginForm next={next ?? "/admin-dashboard"} />
         </div>
       </div>
     </div>

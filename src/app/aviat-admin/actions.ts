@@ -8,7 +8,7 @@ export type LoginState = { error: string | null };
 export async function login(_prevState: LoginState, formData: FormData): Promise<LoginState> {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const next = String(formData.get("next") ?? "/admin");
+  const next = String(formData.get("next") ?? "/admin-dashboard");
 
   if (!email || !password) {
     return { error: "Please enter your email and password." };
@@ -21,11 +21,11 @@ export async function login(_prevState: LoginState, formData: FormData): Promise
     return { error: "Invalid email or password." };
   }
 
-  redirect(next.startsWith("/admin") ? next : "/admin");
+  redirect(next.startsWith("/admin-dashboard") ? next : "/admin-dashboard");
 }
 
 export async function logout() {
   const supabase = await createClient();
   await supabase.auth.signOut();
-  redirect("/admin/login");
+  redirect("/aviat-admin");
 }

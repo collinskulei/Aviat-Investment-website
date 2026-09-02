@@ -2,12 +2,12 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isSupabaseConfigured, SUPABASE_ANON_KEY, SUPABASE_URL } from "@/lib/supabase/env";
 
-const ADMIN_PATH = "/admin";
-const ADMIN_LOGIN_PATH = "/admin/login";
+const ADMIN_PATH = "/admin-dashboard";
+const ADMIN_LOGIN_PATH = "/aviat-admin";
 
 /**
  * Refreshes the Supabase auth session cookie on every request and
- * gates everything under /admin (except the login page) behind it.
+ * gates everything under /admin-dashboard behind the /aviat-admin login.
  */
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });

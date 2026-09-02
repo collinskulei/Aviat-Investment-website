@@ -7,7 +7,7 @@ import type { QuoteRequestStatus } from "@/lib/types";
 export async function updateQuoteStatus(id: string, status: QuoteRequestStatus) {
   const supabase = await createClient();
   await supabase.from("quote_requests").update({ status }).eq("id", id);
-  revalidatePath("/admin");
+  revalidatePath("/admin-dashboard");
 }
 
 export async function upsertService(formData: FormData) {
@@ -30,7 +30,7 @@ export async function upsertService(formData: FormData) {
     await supabase.from("services").insert(payload);
   }
 
-  revalidatePath("/admin/services");
+  revalidatePath("/admin-dashboard/services");
   revalidatePath("/services", "layout");
   revalidatePath("/");
 }
@@ -38,7 +38,7 @@ export async function upsertService(formData: FormData) {
 export async function deleteService(id: string) {
   const supabase = await createClient();
   await supabase.from("services").delete().eq("id", id);
-  revalidatePath("/admin/services");
+  revalidatePath("/admin-dashboard/services");
   revalidatePath("/services", "layout");
   revalidatePath("/");
 }
