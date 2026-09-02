@@ -12,8 +12,8 @@ export default function AboutPage() {
     <>
       <section className="border-b border-card-border bg-gradient-to-b from-[#1c2733] to-background px-6 py-20">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="text-4xl font-extrabold sm:text-5xl">
-            About <span className="text-accent">Aviat Investment</span>
+          <h1 className="text-4xl font-extrabold text-white sm:text-5xl">
+            About <span className="text-hero-accent">Aviat Investment</span>
           </h1>
           <p className="mt-6 text-lg text-zinc-200">
             A specialist aviation maintenance provider based at Wilson Airport, dedicated to

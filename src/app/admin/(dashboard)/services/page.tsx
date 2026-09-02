@@ -19,7 +19,7 @@ export default async function AdminServicesPage() {
       </p>
 
       {error && (
-        <p className="mt-6 text-sm text-red-400">Couldn&apos;t load services: {error.message}</p>
+        <p className="mt-6 text-sm text-red-600 dark:text-red-400">Couldn&apos;t load services: {error.message}</p>
       )}
 
       <div className="mt-8 space-y-6">

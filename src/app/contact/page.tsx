@@ -9,15 +9,19 @@ export const metadata: Metadata = {
   description: "Get in touch with Aviat Investment Limited at Wilson Airport for a service quote.",
 };
 
-export default async function ContactPage() {
-  const services = await getActiveServices();
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ service?: string }>;
+}) {
+  const [services, { service }] = await Promise.all([getActiveServices(), searchParams]);
 
   return (
     <>
       <section className="border-b border-card-border bg-gradient-to-b from-[#1c2733] to-background px-6 py-20">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="text-4xl font-extrabold sm:text-5xl">
-            Get In <span className="text-accent">Touch</span>
+          <h1 className="text-4xl font-extrabold text-white sm:text-5xl">
+            Get In <span className="text-hero-accent">Touch</span>
           </h1>
           <p className="mt-6 text-lg text-zinc-200">
             Reach out for a service quote or a technical inquiry &mdash; our team responds
@@ -54,7 +58,7 @@ export default async function ContactPage() {
               Complete the form below and our technical team will reach out within 24 hours.
             </p>
             <div className="mt-8">
-              <QuoteForm services={services} />
+              <QuoteForm services={services} defaultService={service} />
             </div>
           </div>
         </div>

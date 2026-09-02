@@ -43,7 +43,7 @@ export function LoginForm({ next }: { next: string }) {
         {pending ? "Signing in..." : "Sign In"}
       </button>
 
-      {state.error && <p className="text-sm font-medium text-red-400">{state.error}</p>}
+      {state.error && <p className="text-sm font-medium text-red-600 dark:text-red-400">{state.error}</p>}
     </form>
   );
 }

@@ -9,13 +9,15 @@ content, form submissions, and admin auth, deployed on Vercel.
 - **Tailwind CSS v4**
 - **Supabase** — Postgres (services + quote requests), Auth (admin login), Storage (optional)
 - **Vercel** — hosting
+- **next-themes** — light/dark mode toggle (dark by default, persisted per visitor)
 
 ## Pages
 
 - `/` — home (hero, why-choose-us, services preview, quote form)
 - `/about` — company info
 - `/services` — full services list
-- `/contact` — contact details + quote form
+- `/services/[slug]` — individual service detail page
+- `/contact` — contact details + quote form (add `?service=Name` to preselect it)
 - `/admin` — quote request inbox (requires Supabase Auth login)
 - `/admin/services` — manage services shown on the site
 - `/admin/login` — admin sign-in

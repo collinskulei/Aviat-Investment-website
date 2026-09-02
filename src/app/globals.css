@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
+/* next-themes toggles a "light"/"dark" class on <html>; make Tailwind's
+   dark: variant follow that instead of prefers-color-scheme. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
+  /* Fallback (pre-hydration) — matches the dark default theme. */
   --background: #050608;
   --foreground: #f5f7fa;
   --card: #101318;
@@ -9,7 +14,32 @@
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
   --primary-foreground: #ffffff;
-  --accent: #60a5fa;
+
+  /* Fixed accent for the dark hero/banner sections — those sections keep a
+     constant dark background in both themes, so their accent doesn't swap. */
+  --hero-accent: #60a5fa;
+}
+
+.dark {
+  --background: #050608;
+  --foreground: #f5f7fa;
+  --card: #101318;
+  --card-border: #23272f;
+  --muted: #9aa3b2;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-foreground: #ffffff;
+}
+
+.light {
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --card: #f8fafc;
+  --card-border: #e2e8f0;
+  --muted: #5b6472;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-foreground: #ffffff;
 }
 
 @theme inline {
@@ -21,7 +51,7 @@
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-primary-foreground: var(--primary-foreground);
-  --color-accent: var(--accent);
+  --color-hero-accent: var(--hero-accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

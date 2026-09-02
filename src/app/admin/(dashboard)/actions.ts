@@ -31,7 +31,7 @@ export async function upsertService(formData: FormData) {
   }
 
   revalidatePath("/admin/services");
-  revalidatePath("/services");
+  revalidatePath("/services", "layout");
   revalidatePath("/");
 }
 
@@ -39,6 +39,6 @@ export async function deleteService(id: string) {
   const supabase = await createClient();
   await supabase.from("services").delete().eq("id", id);
   revalidatePath("/admin/services");
-  revalidatePath("/services");
+  revalidatePath("/services", "layout");
   revalidatePath("/");
 }

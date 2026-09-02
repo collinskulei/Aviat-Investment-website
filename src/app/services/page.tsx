@@ -16,8 +16,8 @@ export default async function ServicesPage() {
     <>
       <section className="border-b border-card-border bg-gradient-to-b from-[#1c2733] to-background px-6 py-20">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="text-4xl font-extrabold sm:text-5xl">
-            Our <span className="text-accent">Services</span>
+          <h1 className="text-4xl font-extrabold text-white sm:text-5xl">
+            Our <span className="text-hero-accent">Services</span>
           </h1>
           <p className="mt-6 text-lg text-zinc-200">
             Specialist restoration, overhaul, and testing services for the components your
@@ -29,10 +29,7 @@ export default async function ServicesPage() {
       <section className="mx-auto max-w-6xl px-6 py-20">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((service) => (
-            <div key={service.id}>
-              <ServiceCard service={service} />
-              <p className="mt-3 px-1 text-sm text-muted">{service.description}</p>
-            </div>
+            <ServiceCard key={service.id} service={service} />
           ))}
         </div>
 

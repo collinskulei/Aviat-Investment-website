@@ -19,7 +19,7 @@ export default async function AdminDashboardPage() {
       </p>
 
       {error && (
-        <p className="mt-6 text-sm text-red-400">
+        <p className="mt-6 text-sm text-red-600 dark:text-red-400">
           Couldn&apos;t load quote requests: {error.message}
         </p>
       )}

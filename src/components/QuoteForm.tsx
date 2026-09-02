@@ -9,7 +9,13 @@ const initialState: QuoteFormState = { status: "idle", message: "" };
 const inputClasses =
   "w-full rounded-lg border border-card-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted focus:border-primary focus:outline-none";
 
-export function QuoteForm({ services }: { services: Service[] }) {
+export function QuoteForm({
+  services,
+  defaultService,
+}: {
+  services: Service[];
+  defaultService?: string;
+}) {
   const [state, formAction, pending] = useActionState(submitQuoteRequest, initialState);
 
   return (
@@ -57,7 +63,13 @@ export function QuoteForm({ services }: { services: Service[] }) {
         <label htmlFor="service" className="mb-1.5 block text-sm font-medium text-foreground">
           Service Required
         </label>
-        <select id="service" name="service" required defaultValue="" className={inputClasses}>
+        <select
+          id="service"
+          name="service"
+          required
+          defaultValue={defaultService ?? ""}
+          className={inputClasses}
+        >
           <option value="" disabled>
             Select a service
           </option>
@@ -96,8 +108,8 @@ export function QuoteForm({ services }: { services: Service[] }) {
           role="status"
           className={
             state.status === "success"
-              ? "text-sm font-medium text-emerald-400"
-              : "text-sm font-medium text-red-400"
+              ? "text-sm font-medium text-emerald-600 dark:text-emerald-400"
+              : "text-sm font-medium text-red-600 dark:text-red-400"
           }
         >
           {state.message}

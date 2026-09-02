@@ -37,7 +37,7 @@ export function ServiceEditor({ service }: { service?: Service }) {
             type="button"
             disabled={pending}
             onClick={() => startTransition(() => deleteService(service!.id))}
-            className="text-xs font-medium text-red-400 hover:text-red-300 disabled:opacity-60"
+            className="text-xs font-medium text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 disabled:opacity-60"
           >
             Delete
           </button>
