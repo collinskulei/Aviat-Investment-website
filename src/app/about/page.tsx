@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
+import { LocationMap } from "@/components/LocationMap";
 
 export const metadata: Metadata = {
   title: "About Us | Aviat Investment Limited",
@@ -44,6 +45,8 @@ export default function AboutPage() {
       </section>
 
       <WhyChooseUs />
+
+      <LocationMap />
     </>
   );
 }

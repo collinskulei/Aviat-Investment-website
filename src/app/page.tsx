@@ -3,6 +3,7 @@ import { Plane } from "lucide-react";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
 import { ServiceCard } from "@/components/ServiceCard";
 import { QuoteForm } from "@/components/QuoteForm";
+import { LocationMap } from "@/components/LocationMap";
 import { getActiveServices } from "@/lib/data/services";
 
 export default async function Home() {
@@ -98,6 +99,8 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      <LocationMap />
     </>
   );
 }

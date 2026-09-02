@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { QuoteForm } from "@/components/QuoteForm";
+import { LocationMap } from "@/components/LocationMap";
 import { CONTACT } from "@/lib/constants";
 import { getActiveServices } from "@/lib/data/services";
 
@@ -63,6 +64,8 @@ export default async function ContactPage({
           </div>
         </div>
       </section>
+
+      <LocationMap />
     </>
   );
 }
