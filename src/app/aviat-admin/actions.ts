@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { getSiteOrigin } from "@/lib/site-url";
 
 export type MagicLinkState = {
@@ -24,12 +25,19 @@ export async function sendMagicLink(
     return { status: "error", message: "Please enter your email address." };
   }
 
+  if (!isSupabaseConfigured) {
+    return {
+      status: "error",
+      message: "Sign-in isn't available yet because Supabase isn't connected.",
+    };
+  }
+
   const origin = await getSiteOrigin();
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      // No public sign-up — a magic link only works for an email that
+      // No public sign-up. A magic link only works for an email that
       // already has an admin account created in the Supabase dashboard.
       shouldCreateUser: false,
       emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(safeNext)}`,
