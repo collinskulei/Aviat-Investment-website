@@ -27,7 +27,7 @@ export default async function Home() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to right, rgba(5,8,12,.85) 0%, rgba(5,8,12,.55) 45%, rgba(5,8,12,.25) 100%)",
+              "linear-gradient(to right, rgba(0,0,0,.55) 0%, rgba(0,0,0,.32) 45%, rgba(0,0,0,.08) 100%)",
           }}
         />
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-background" />

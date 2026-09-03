@@ -18,6 +18,7 @@ export async function login(_prevState: LoginState, formData: FormData): Promise
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
+    console.error("[login] Supabase signInWithPassword error:", error.status, error.message);
     return { error: "Invalid email or password." };
   }
 
