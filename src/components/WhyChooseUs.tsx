@@ -7,7 +7,7 @@ export function WhyChooseUs() {
       <h2 className="text-center text-3xl font-bold sm:text-4xl">
         Why Choose <span className="text-primary">Aviat Investment Limited?</span>
       </h2>
-      <div className="mx-auto mt-4 h-1 w-16 rounded bg-primary" />
+      <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-primary to-transparent" />
 
       <div className="mt-12 grid gap-6 sm:grid-cols-3">
         {WHY_CHOOSE_US.map((item) => (

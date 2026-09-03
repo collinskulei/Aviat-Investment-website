@@ -8,7 +8,7 @@ export const NAV_LINKS = [
   { href: "/contact", label: "Contact" },
 ] as const;
 
-/** Placeholder contact details — replace with the real ones. */
+/** Placeholder contact details - replace with the real ones. */
 export const CONTACT = {
   phone: "[PHONE NUMBER]",
   email: "[EMAIL ADDRESS]",

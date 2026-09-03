@@ -12,7 +12,7 @@ export async function submitQuoteRequest(
   _prevState: QuoteFormState,
   formData: FormData
 ): Promise<QuoteFormState> {
-  // Honeypot field — real users never fill this in.
+  // Honeypot field - real users never fill this in.
   if (formData.get("company_website")) {
     return { status: "success", message: "Thanks! We'll be in touch shortly." };
   }
@@ -34,7 +34,7 @@ export async function submitQuoteRequest(
   if (!isSupabaseConfigured) {
     return {
       status: "error",
-      message: "Service requests aren't available yet — Supabase isn't connected. Please email us directly.",
+      message: "Service requests aren't available yet because Supabase isn't connected. Please email us directly.",
     };
   }
 

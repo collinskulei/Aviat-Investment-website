@@ -1,4 +1,4 @@
--- Aviat Investment Limited — Supabase schema
+-- Aviat Investment Limited - Supabase schema
 -- Run this once in the Supabase SQL editor for a new project
 -- (Dashboard -> SQL Editor -> New query -> paste -> Run).
 
@@ -45,7 +45,7 @@ create policy "Public can read active services"
   to anon, authenticated
   using (is_active = true);
 
--- Signed-in admins (any Supabase Auth user — accounts are created manually,
+-- Signed-in admins (any Supabase Auth user - accounts are created manually,
 -- there is no public sign-up) can read every row, including inactive ones.
 create policy "Admins can read all services"
   on public.services for select
@@ -86,7 +86,7 @@ create index if not exists quote_requests_created_at_idx on public.quote_request
 alter table public.quote_requests enable row level security;
 
 -- The public quote form inserts as the anonymous role. No public select,
--- update, or delete — only admins (authenticated) can read/manage submissions.
+-- update, or delete - only admins (authenticated) can read/manage submissions.
 create policy "Anyone can submit a quote request"
   on public.quote_requests for insert
   to anon, authenticated
@@ -104,7 +104,7 @@ create policy "Admins can update quote requests"
   with check (true);
 
 -- ---------------------------------------------------------------------------
--- Seed data — mirrors src/lib/seed-services.ts. Safe to run multiple times.
+-- Seed data - mirrors src/lib/seed-services.ts. Safe to run multiple times.
 -- ---------------------------------------------------------------------------
 insert into public.services (slug, title, short_description, description, icon, sort_order)
 values

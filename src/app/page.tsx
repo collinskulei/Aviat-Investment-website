@@ -46,16 +46,10 @@ export default async function Home() {
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
-            <Link
-              href="/contact"
-              className="rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground underline decoration-2 underline-offset-4 transition-colors hover:bg-primary-hover"
-            >
+            <Link href="/contact" className="btn-fade-light rounded-lg px-6 py-3 text-sm font-semibold">
               GET A QUOTE
             </Link>
-            <Link
-              href="/services"
-              className="rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition-colors hover:bg-white/20"
-            >
+            <Link href="/services" className="btn-fade-light rounded-lg px-6 py-3 text-sm font-semibold">
               VIEW OUR SERVICES
             </Link>
           </div>
@@ -83,7 +77,7 @@ export default async function Home() {
       {/* Services preview */}
       <section className="mx-auto max-w-6xl px-6 pb-20">
         <h2 className="text-center text-3xl font-bold sm:text-4xl">Our Services</h2>
-        <div className="mx-auto mt-4 h-1 w-16 rounded bg-primary" />
+        <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-primary to-transparent" />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((service) => (
             <ServiceCard key={service.id} service={service} />

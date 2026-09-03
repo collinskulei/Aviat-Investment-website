@@ -20,7 +20,7 @@ export function QuoteForm({
 
   return (
     <form action={formAction} className="space-y-5">
-      {/* Honeypot — hidden from real visitors, catches simple bots */}
+      {/* Honeypot - hidden from real visitors, catches simple bots */}
       <input
         type="text"
         name="company_website"
@@ -98,7 +98,7 @@ export function QuoteForm({
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover disabled:opacity-60"
+        className="btn-fade w-full rounded-lg px-6 py-3 text-sm font-semibold disabled:opacity-60"
       >
         {pending ? "Sending..." : "Send Service Request"}
       </button>

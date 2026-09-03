@@ -50,7 +50,7 @@ export default async function AdminDashboardPage() {
                   <td className="px-4 py-3 font-medium">{quote.full_name}</td>
                   <td className="px-4 py-3 text-muted">{quote.email}</td>
                   <td className="px-4 py-3">{quote.service}</td>
-                  <td className="max-w-xs px-4 py-3 text-muted">{quote.message || "—"}</td>
+                  <td className="max-w-xs px-4 py-3 text-muted">{quote.message || "-"}</td>
                   <td className="px-4 py-3">
                     <QuoteStatusSelect id={quote.id} status={quote.status} />
                   </td>

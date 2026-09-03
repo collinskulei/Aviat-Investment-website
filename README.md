@@ -1,4 +1,4 @@
-# Aviat Investment Limited — Website
+# Aviat Investment Limited - Website
 
 Next.js (App Router) rebuild of the Aviat Investment Limited site, with Supabase for
 content, form submissions, and admin auth, deployed on Vercel.
@@ -7,20 +7,21 @@ content, form submissions, and admin auth, deployed on Vercel.
 
 - **Next.js 16** (App Router, TypeScript, Server Actions)
 - **Tailwind CSS v4**
-- **Supabase** — Postgres (services + quote requests), Auth (admin login), Storage (optional)
-- **Vercel** — hosting
-- **next-themes** — light/dark mode toggle (dark by default, persisted per visitor)
+- **Supabase** - Postgres (services + quote requests), Auth (magic-link admin login), Storage (optional)
+- **Vercel** - hosting
+- **next-themes** - light/dark mode toggle (dark by default, persisted per visitor)
 
 ## Pages
 
-- `/` — home (hero, why-choose-us, services preview, quote form)
-- `/about` — company info
-- `/services` — full services list
-- `/services/[slug]` — individual service detail page
-- `/contact` — contact details + quote form (add `?service=Name` to preselect it)
-- `/admin-dashboard` — quote request inbox (requires Supabase Auth login)
-- `/admin-dashboard/services` — manage services shown on the site
-- `/aviat-admin` — admin sign-in (has a temporary "Demo credentials" note — see below)
+- `/` - home (hero, why-choose-us, services preview, quote form)
+- `/about` - company info
+- `/services` - full services list
+- `/services/[slug]` - individual service detail page
+- `/contact` - contact details + quote form (add `?service=Name` to preselect it)
+- `/admin-dashboard` - quote request inbox (requires Supabase Auth login)
+- `/admin-dashboard/services` - manage services shown on the site
+- `/aviat-admin` - admin sign-in via magic link (no password)
+- `/auth/callback` - completes the magic-link sign-in, then redirects to the dashboard
 
 ## 1. Local setup
 
@@ -31,7 +32,7 @@ npm run dev
 ```
 
 The site renders with built-in placeholder content (`src/lib/seed-services.ts`) even
-without Supabase configured — the quote form just won't be able to save submissions
+without Supabase configured - the quote form just won't be able to save submissions
 until it's connected.
 
 ## 2. Connect Supabase
@@ -45,15 +46,25 @@ until it's connected.
    ```
 3. Open the **SQL Editor** in the Supabase dashboard, paste the contents of
    [`supabase/schema.sql`](supabase/schema.sql), and run it. This creates:
-   - `services` — editable content for the Home/Services pages (seeded with the
+   - `services` - editable content for the Home/Services pages (seeded with the
      current six services)
-   - `quote_requests` — submissions from the "Request a Service Quote" form
+   - `quote_requests` - submissions from the "Request a Service Quote" form
    - Row Level Security policies (public can read active services and submit quote
      requests; only signed-in admins can read submissions or manage services)
-4. Create an admin login: **Authentication -> Users -> Add user** (email + password).
-   There is no public sign-up — only accounts created here can access `/admin-dashboard`.
-   To make the login page's "Demo credentials" note actually work, create the user
-   with those exact values (see `src/app/aviat-admin/LoginForm.tsx`).
+4. Create an admin account: **Authentication -> Users -> Add user**, email only
+   (any password works since it's never used - sign-in is by magic link).
+   There is no public sign-up - only accounts created here can access
+   `/admin-dashboard`.
+5. **Authentication -> URL Configuration**, add `/auth/callback` to both:
+   - **Site URL** (e.g. `https://your-domain.com`)
+   - **Redirect URLs** (add both `http://localhost:3000/auth/callback` for local
+     dev and `https://your-domain.com/auth/callback` for production)
+
+   Magic links are rejected if their redirect URL isn't on this allowlist.
+6. Supabase's built-in email sending (used for magic links) is rate-limited to a
+   few emails per hour on the free tier - fine for a small admin team, but
+   configure a custom SMTP provider under **Project Settings -> Auth** if you
+   expect heavier use.
 
 ## 3. Deploy to Vercel
 
@@ -66,10 +77,7 @@ until it's connected.
 ## Content still to fill in
 
 - **Contact details**: phone, email, and address in `src/lib/constants.ts`
-  (`CONTACT`) are placeholders — replace with the real ones.
-- **Photography**: the hero and banner sections currently use CSS gradients as
-  stand-ins for aircraft photography. Drop real images into `public/images/` and
-  swap them into `src/app/page.tsx` (and `about`/`services` if desired).
-- **Demo credentials**: `/aviat-admin` shows a collapsible "Demo credentials" note
-  for reviewing this build. Remove it from `src/app/aviat-admin/LoginForm.tsx`
-  once real admin access is set up.
+  (`CONTACT`) are placeholders - replace with the real ones.
+- **Photography**: `/about` and `/services`/`/contact` banners still use CSS
+  gradients as stand-ins for aircraft photography (the homepage hero already
+  uses a real photo at `public/images/hero-aircraft.jpg`).

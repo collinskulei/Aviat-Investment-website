@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone, Plane } from "lucide-react";
 import { QuoteForm } from "@/components/QuoteForm";
 import { LocationMap } from "@/components/LocationMap";
 import { CONTACT } from "@/lib/constants";
@@ -19,8 +19,12 @@ export default async function ContactPage({
 
   return (
     <>
-      <section className="border-b border-card-border bg-gradient-to-b from-[#1c2733] to-background px-6 py-20">
-        <div className="mx-auto max-w-4xl text-center">
+      <section className="relative overflow-hidden border-b border-card-border bg-gradient-to-b from-[#1c2733] to-background px-6 py-20">
+        <Plane
+          className="pointer-events-none absolute -right-12 -top-10 size-64 rotate-45 text-white/5"
+          strokeWidth={0.5}
+        />
+        <div className="relative mx-auto max-w-4xl text-center">
           <h1 className="text-4xl font-extrabold text-white sm:text-5xl">
             Get In <span className="text-hero-accent">Touch</span>
           </h1>

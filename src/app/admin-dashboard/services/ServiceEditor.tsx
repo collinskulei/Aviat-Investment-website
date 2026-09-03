@@ -125,7 +125,7 @@ export function ServiceEditor({ service }: { service?: Service }) {
 
       <button
         type="submit"
-        className="mt-5 rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
+        className="btn-fade mt-5 rounded-lg px-5 py-2 text-sm font-semibold"
       >
         {isNew ? "Add Service" : "Save Changes"}
       </button>

@@ -20,7 +20,7 @@ export function LocationMap() {
             href={DIRECTIONS_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
+            className="btn-fade inline-flex shrink-0 items-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold"
           >
             <MapPin size={18} aria-hidden="true" />
             Visit Us
