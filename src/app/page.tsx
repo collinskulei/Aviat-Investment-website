@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Plane } from "lucide-react";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
 import { ServiceCard } from "@/components/ServiceCard";
@@ -12,11 +13,24 @@ export default async function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#3a4a5c] via-[#141c26] to-background">
-        <Plane
-          className="pointer-events-none absolute -right-16 top-24 size-[28rem] rotate-45 text-white/5"
-          strokeWidth={0.5}
+      <section className="relative overflow-hidden bg-[#0b1119]">
+        <Image
+          src="/images/hero-aircraft.jpg"
+          alt="Aircraft banking against a blue sky"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+          style={{ objectPosition: "center 42%" }}
         />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to right, rgba(5,8,12,.85) 0%, rgba(5,8,12,.55) 45%, rgba(5,8,12,.25) 100%)",
+          }}
+        />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-background" />
         <div className="relative mx-auto max-w-6xl px-6 py-28 sm:py-36">
           <h1 className="max-w-2xl text-4xl font-extrabold leading-tight text-white sm:text-5xl">
             Precision Maintenance
