@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Plane } from "lucide-react";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
 import { LocationMap } from "@/components/LocationMap";
+import { getSiteContent } from "@/lib/data/site-content";
+import { getWhyChooseUsItems } from "@/lib/data/why-choose-us";
 
 export const metadata: Metadata = {
   title: "About Us | Aviat Investment Limited",
@@ -9,7 +11,12 @@ export const metadata: Metadata = {
     "Aviat Investment Limited is an aviation maintenance specialist based at Wilson Airport, focused on restoration, overhaul, and testing of critical aircraft components.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const [siteContent, whyChooseUsItems] = await Promise.all([
+    getSiteContent(),
+    getWhyChooseUsItems(),
+  ]);
+
   return (
     <>
       <section className="relative overflow-hidden border-b border-card-border bg-gradient-to-b from-[#1c2733] to-background px-6 py-20">
@@ -29,27 +36,27 @@ export default function AboutPage() {
       </section>
 
       <section className="mx-auto max-w-4xl px-6 py-20">
+        {siteContent.about_image_url && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={siteContent.about_image_url}
+            alt="Aviat Investment Limited team and facility"
+            className="mb-12 aspect-video w-full rounded-2xl border border-card-border object-cover"
+          />
+        )}
+
         <h2 className="text-3xl font-bold">Who We Are</h2>
-        <p className="mt-4 text-muted">
-          Aviat Investment Limited is an aviation component maintenance company operating out
-          of Wilson Airport, near Parapet. We focus exclusively on the critical safety
-          equipment that keeps aircraft and crews protected: batteries, life vests, emergency
-          power packs, locator beacons, and pressure vessels.
-        </p>
-        <p className="mt-4 text-muted">
-          Our team combines hands-on technical expertise with rigorous, standards-driven
-          processes, so operators can trust that every component we touch meets the demands of
-          real-world flight operations.
-        </p>
+        {siteContent.about_intro.split("\n\n").map((paragraph, i) => (
+          <p key={i} className="mt-4 text-muted">
+            {paragraph}
+          </p>
+        ))}
 
         <h2 className="mt-14 text-3xl font-bold">Our Mission</h2>
-        <p className="mt-4 text-muted">
-          To deliver precise, dependable maintenance for aviation safety equipment &mdash; giving
-          operators confidence in every takeoff, and every landing.
-        </p>
+        <p className="mt-4 text-muted">{siteContent.about_mission}</p>
       </section>
 
-      <WhyChooseUs />
+      <WhyChooseUs items={whyChooseUsItems} />
 
       <LocationMap />
     </>

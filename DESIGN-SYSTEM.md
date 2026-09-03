@@ -382,6 +382,41 @@ Clicking the emailed link lands on a Route Handler (`/auth/callback`) that
 exchanges the one-time code for a session via the same cookie-aware server
 client used everywhere else, then redirects into `/admin-dashboard`.
 
+### 4.11 Admin shell (sidebar)
+
+`/admin-dashboard/*` uses a persistent sidebar on desktop, collapsing to a top
+bar + toggled panel on mobile - one client component (`AdminShell`) renders
+both, so nav state lives in exactly one place:
+```tsx
+<div className="md:flex md:min-h-screen">
+  <aside className="hidden w-64 shrink-0 border-r border-card-border bg-card md:flex md:flex-col">
+    {/* nav items, Sign Out pinned at the bottom */}
+  </aside>
+  <div className="border-b border-card-border bg-card md:hidden">{/* mobile top bar + toggled nav */}</div>
+  <main className="flex-1 px-4 py-8 sm:px-8 md:px-10 md:py-10">{children}</main>
+</div>
+```
+The active nav item uses `bg-primary/10 text-primary`, distinct from the public
+Header's plain `text-primary` (no background) - admin nav is denser and
+benefits from a filled active state.
+
+### 4.12 Image upload
+
+Every image on the site (logo, hero photo, about photo, per-service photo)
+goes through one shared component and one shared Server Action, rather than a
+bespoke uploader per field:
+```tsx
+<ImageUploadField target="hero" currentUrl={content.hero_image_url} label="Hero background photo" />
+```
+`target` (`"logo" | "hero" | "about" | "service:<id>"`) tells the action which
+row/column to write the resulting public URL onto after uploading to the
+`site-media` Supabase Storage bucket - see `uploadSiteMedia` in
+`src/app/admin-dashboard/media-actions.ts`. Admin-uploaded images render via a
+plain `<img>`, not `next/image` (their host is a per-project Supabase Storage
+URL, not worth a `next.config.ts` remote-pattern allowlist for); the bundled
+default hero photo in `public/images/` is the one exception that still uses
+`next/image`, since it's a static local asset.
+
 ---
 
 ## 5. Motion

@@ -41,7 +41,7 @@ export default async function ServicesPage() {
         <div className="mt-16 rounded-2xl border border-card-border bg-card p-8 text-center sm:p-10">
           <h2 className="text-2xl font-bold">Don&apos;t see what you need?</h2>
           <p className="mt-2 text-muted">
-            Get in touch and tell us about your aircraft and requirements &mdash; our team
+            Get in touch and tell us about your aircraft and requirements. Our team
             handles technical inquiries beyond the list above.
           </p>
           <Link href="/contact" className="btn-fade mt-6 inline-block rounded-lg px-6 py-3 text-sm font-semibold">

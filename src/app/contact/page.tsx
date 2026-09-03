@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Mail, MapPin, Phone, Plane } from "lucide-react";
 import { QuoteForm } from "@/components/QuoteForm";
 import { LocationMap } from "@/components/LocationMap";
-import { CONTACT } from "@/lib/constants";
 import { getActiveServices } from "@/lib/data/services";
+import { getSiteContent } from "@/lib/data/site-content";
 
 export const metadata: Metadata = {
   title: "Contact | Aviat Investment Limited",
@@ -15,7 +15,11 @@ export default async function ContactPage({
 }: {
   searchParams: Promise<{ service?: string }>;
 }) {
-  const [services, { service }] = await Promise.all([getActiveServices(), searchParams]);
+  const [services, siteContent, { service }] = await Promise.all([
+    getActiveServices(),
+    getSiteContent(),
+    searchParams,
+  ]);
 
   return (
     <>
@@ -29,7 +33,7 @@ export default async function ContactPage({
             Get In <span className="text-hero-accent">Touch</span>
           </h1>
           <p className="mt-6 text-lg text-zinc-200">
-            Reach out for a service quote or a technical inquiry &mdash; our team responds
+            Reach out for a service quote or a technical inquiry, and our team responds
             within 24 hours.
           </p>
         </div>
@@ -41,17 +45,17 @@ export default async function ContactPage({
             <div className="rounded-xl border border-card-border bg-card p-6">
               <MapPin className="size-6 text-primary" aria-hidden="true" />
               <h3 className="mt-3 font-semibold">Location</h3>
-              <p className="mt-1 text-sm text-muted">{CONTACT.address}</p>
+              <p className="mt-1 text-sm text-muted">{siteContent.contact_address}</p>
             </div>
             <div className="rounded-xl border border-card-border bg-card p-6">
               <Phone className="size-6 text-primary" aria-hidden="true" />
               <h3 className="mt-3 font-semibold">Phone</h3>
-              <p className="mt-1 text-sm text-muted">{CONTACT.phone}</p>
+              <p className="mt-1 text-sm text-muted">{siteContent.contact_phone}</p>
             </div>
             <div className="rounded-xl border border-card-border bg-card p-6">
               <Mail className="size-6 text-primary" aria-hidden="true" />
               <h3 className="mt-3 font-semibold">Email</h3>
-              <p className="mt-1 text-sm text-muted">{CONTACT.email}</p>
+              <p className="mt-1 text-sm text-muted">{siteContent.contact_email}</p>
             </div>
           </div>
 

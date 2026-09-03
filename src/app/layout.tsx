@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { getSiteContent } from "@/lib/data/site-content";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,7 +22,9 @@ export const metadata: Metadata = {
     "Specialist restoration, overhaul, and testing services for critical aircraft components. Trusted expertise located at Wilson Airport.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const siteContent = await getSiteContent();
+
   return (
     <html
       lang="en"
@@ -35,9 +38,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           themes={["light", "dark"]}
           enableSystem={false}
         >
-          <Header />
+          <Header logoUrl={siteContent.logo_url} />
           <main className="flex-1">{children}</main>
-          <Footer />
+          <Footer siteContent={siteContent} />
         </ThemeProvider>
       </body>
     </html>

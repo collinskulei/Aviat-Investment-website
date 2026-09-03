@@ -7,15 +7,20 @@ import { Menu, X } from "lucide-react";
 import { NAV_LINKS, SITE_NAME } from "@/lib/constants";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-export function Header() {
+export function Header({ logoUrl }: { logoUrl?: string | null }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 border-b border-card-border bg-background/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="text-lg font-bold tracking-tight text-foreground">
-          {SITE_NAME}
+        <Link href="/" className="flex items-center text-lg font-bold tracking-tight text-foreground">
+          {logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logoUrl} alt={SITE_NAME} className="h-9 w-auto" />
+          ) : (
+            SITE_NAME
+          )}
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">

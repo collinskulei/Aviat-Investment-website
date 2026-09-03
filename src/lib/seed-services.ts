@@ -16,6 +16,7 @@ export const SEED_SERVICES: Service[] = [
     description:
       "Full lifecycle care for aircraft batteries, including scheduled charging, capacity testing, restoration, and complete overhaul in line with manufacturer and regulatory requirements.",
     icon: "battery-charging",
+    image_url: null,
     sort_order: 1,
     is_active: true,
     created_at: "",
@@ -30,6 +31,7 @@ export const SEED_SERVICES: Service[] = [
     description:
       "Inspection, repacking, and overhaul of aviation life vests, verifying inflation systems, CO2 cylinders, and fabric integrity against airworthiness standards.",
     icon: "life-buoy",
+    image_url: null,
     sort_order: 2,
     is_active: true,
     created_at: "",
@@ -44,6 +46,7 @@ export const SEED_SERVICES: Service[] = [
     description:
       "Restoration and overhaul of emergency power packs used across critical aircraft systems, with new-unit supply available where restoration isn't viable.",
     icon: "zap",
+    image_url: null,
     sort_order: 3,
     is_active: true,
     created_at: "",
@@ -58,6 +61,7 @@ export const SEED_SERVICES: Service[] = [
     description:
       "Precision restoration of Underwater Locator Beacon batteries, ensuring reliable activation and signal duration in line with flight data recorder requirements.",
     icon: "radio",
+    image_url: null,
     sort_order: 4,
     is_active: true,
     created_at: "",
@@ -72,6 +76,7 @@ export const SEED_SERVICES: Service[] = [
     description:
       "Hydrostatic pressure testing on aviation cylinders to confirm structural integrity and compliance with rigorous industry safety standards.",
     icon: "gauge",
+    image_url: null,
     sort_order: 5,
     is_active: true,
     created_at: "",
@@ -86,6 +91,7 @@ export const SEED_SERVICES: Service[] = [
     description:
       "Complete overhaul of aviation oxygen cylinders, including pressure testing, valve servicing, and certification to keep emergency breathing systems mission ready.",
     icon: "wind",
+    image_url: null,
     sort_order: 6,
     is_active: true,
     created_at: "",

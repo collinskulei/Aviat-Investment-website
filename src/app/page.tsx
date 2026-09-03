@@ -6,23 +6,39 @@ import { ServiceCard } from "@/components/ServiceCard";
 import { QuoteForm } from "@/components/QuoteForm";
 import { LocationMap } from "@/components/LocationMap";
 import { getActiveServices } from "@/lib/data/services";
+import { getSiteContent } from "@/lib/data/site-content";
+import { getWhyChooseUsItems } from "@/lib/data/why-choose-us";
 
 export default async function Home() {
-  const services = await getActiveServices();
+  const [services, siteContent, whyChooseUsItems] = await Promise.all([
+    getActiveServices(),
+    getSiteContent(),
+    getWhyChooseUsItems(),
+  ]);
 
   return (
     <>
       {/* Hero */}
       <section className="relative overflow-hidden bg-[#0b1119]">
-        <Image
-          src="/images/hero-aircraft.jpg"
-          alt="Aircraft banking against a blue sky"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-          style={{ objectPosition: "center 42%" }}
-        />
+        {siteContent.hero_image_url ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={siteContent.hero_image_url}
+            alt="Aircraft banking against a blue sky"
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ objectPosition: "center 42%" }}
+          />
+        ) : (
+          <Image
+            src="/images/hero-aircraft.jpg"
+            alt="Aircraft banking against a blue sky"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+            style={{ objectPosition: "center 42%" }}
+          />
+        )}
         <div
           className="absolute inset-0"
           style={{
@@ -33,17 +49,15 @@ export default async function Home() {
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-background" />
         <div className="relative mx-auto max-w-6xl px-6 py-28 sm:py-36">
           <h1 className="max-w-2xl text-4xl font-extrabold leading-tight text-white sm:text-5xl">
-            Precision Maintenance
+            {siteContent.hero_headline}
             <br />
-            <span className="text-hero-accent">for Aviation Safety.</span>
+            <span className="text-hero-accent">{siteContent.hero_subheadline}</span>
           </h1>
           <p className="mt-6 max-w-xl text-lg text-zinc-200">
             Specialist restoration, overhaul, and testing services for critical aircraft
             components.
           </p>
-          <p className="mt-2 max-w-xl font-medium text-hero-accent">
-            Trusted expertise located at Wilson Airport.
-          </p>
+          <p className="mt-2 max-w-xl font-medium text-hero-accent">{siteContent.hero_tagline}</p>
 
           <div className="mt-8 flex flex-wrap gap-4">
             <Link href="/contact" className="btn-fade-light rounded-lg px-6 py-3 text-sm font-semibold">
@@ -56,7 +70,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <WhyChooseUs />
+      <WhyChooseUs items={whyChooseUsItems} />
 
       {/* Banner */}
       <section className="mx-auto max-w-6xl px-6 pb-20">

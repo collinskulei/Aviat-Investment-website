@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { deleteService, upsertService } from "../actions";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import type { Service } from "@/lib/types";
 
 const inputClasses =
@@ -64,6 +65,17 @@ export function ServiceEditor({ service }: { service?: Service }) {
           />
         </div>
       </div>
+
+      {!isNew && (
+        <div className="mt-4">
+          <ImageUploadField
+            target={`service:${service!.id}`}
+            currentUrl={service!.image_url}
+            label="Photo (shown on the service card and its page; optional)"
+            aspect="aspect-video"
+          />
+        </div>
+      )}
 
       <div className="mt-4">
         <label className="mb-1.5 block text-xs font-medium text-muted">

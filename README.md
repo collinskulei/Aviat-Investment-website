@@ -7,7 +7,7 @@ content, form submissions, and admin auth, deployed on Vercel.
 
 - **Next.js 16** (App Router, TypeScript, Server Actions)
 - **Tailwind CSS v4**
-- **Supabase** - Postgres (services + quote requests), Auth (magic-link admin login), Storage (optional)
+- **Supabase** - Postgres (services, site content, quote requests), Auth (magic-link admin login), Storage (admin-uploaded images)
 - **Vercel** - hosting
 - **next-themes** - light/dark mode toggle (dark by default, persisted per visitor)
 
@@ -19,7 +19,8 @@ content, form submissions, and admin auth, deployed on Vercel.
 - `/services/[slug]` - individual service detail page
 - `/contact` - contact details + quote form (add `?service=Name` to preselect it)
 - `/admin-dashboard` - quote request inbox (requires Supabase Auth login)
-- `/admin-dashboard/services` - manage services shown on the site
+- `/admin-dashboard/services` - manage services shown on the site (with photo upload)
+- `/admin-dashboard/content` - edit the logo, hero, about, and contact copy/photos
 - `/aviat-admin` - admin sign-in via magic link (no password)
 - `/auth/callback` - completes the magic-link sign-in, then redirects to the dashboard
 
@@ -45,12 +46,17 @@ until it's connected.
    NEXT_PUBLIC_SUPABASE_ANON_KEY=...
    ```
 3. Open the **SQL Editor** in the Supabase dashboard, paste the contents of
-   [`supabase/schema.sql`](supabase/schema.sql), and run it. This creates:
+   [`supabase/schema.sql`](supabase/schema.sql), and run it (safe to re-run any
+   time this file changes - every statement is idempotent). This creates:
    - `services` - editable content for the Home/Services pages (seeded with the
-     current six services)
+     current six services), plus an `image_url` column for an optional photo
+   - `site_content` - the logo, hero, about, and contact copy edited from
+     `/admin-dashboard/content`
+   - `why_choose_us` - the three cards shown on Home/About
    - `quote_requests` - submissions from the "Request a Service Quote" form
-   - Row Level Security policies (public can read active services and submit quote
-     requests; only signed-in admins can read submissions or manage services)
+   - The `site-media` Storage bucket, for logo/hero/about/service photo uploads
+   - Row Level Security policies on all of the above (public can read active
+     content and submit quote requests; only signed-in admins can write)
 4. Create an admin account: **Authentication -> Users -> Add user**, email only
    (any password works since it's never used - sign-in is by magic link).
    There is no public sign-up - only accounts created here can access
@@ -74,10 +80,25 @@ until it's connected.
    **Settings -> Environment Variables**.
 4. Deploy.
 
-## Content still to fill in
+## Editing site content
 
-- **Contact details**: phone, email, and address in `src/lib/constants.ts`
-  (`CONTACT`) are placeholders - replace with the real ones.
-- **Photography**: `/about` and `/services`/`/contact` banners still use CSS
-  gradients as stand-ins for aircraft photography (the homepage hero already
-  uses a real photo at `public/images/hero-aircraft.jpg`).
+Everything below is edited from `/admin-dashboard/content` and
+`/admin-dashboard/services` once Supabase is connected - no code changes or
+redeploy needed:
+
+- Logo (header + footer), replacing the "Aviat Investment" text wordmark
+- Home hero photo, headline, and tagline
+- About page photo, intro text, and mission statement
+- Contact phone, email, address, and business hours (shown on the Contact
+  page and in the footer)
+- The three "Why Choose Us" cards
+- Each service's title, description, icon, and an optional photo
+
+Until an admin fills these in, the site renders the placeholder copy in
+`src/lib/seed-site-content.ts` / `src/lib/seed-why-choose-us.ts` /
+`src/lib/seed-services.ts`.
+
+**Note on the `/about`, `/services`, and `/contact` page banners**: these still
+use a CSS gradient rather than a photo (only the homepage hero and the
+optional About page photo are real images) - that's a design choice in the
+code, not something editable from the admin.

@@ -46,6 +46,15 @@ export default async function ServiceDetailPage({
       </section>
 
       <section className="mx-auto max-w-3xl px-6 py-20">
+        {service.image_url && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={service.image_url}
+            alt={service.title}
+            className="mb-10 aspect-video w-full rounded-2xl border border-card-border object-cover"
+          />
+        )}
+
         <p className="text-lg leading-relaxed text-muted">{service.description}</p>
 
         <div className="mt-12 rounded-2xl border border-card-border bg-card p-8 text-center sm:p-10">
