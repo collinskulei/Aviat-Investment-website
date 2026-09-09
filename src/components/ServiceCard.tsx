@@ -9,12 +9,14 @@ export function ServiceCard({ service }: { service: Service }) {
       className="block overflow-hidden rounded-xl border border-card-border bg-card transition-colors hover:border-primary/50"
     >
       {service.image_url ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={service.image_url}
-          alt={service.title}
-          className="h-36 w-full object-cover"
-        />
+        <div className="flex h-40 items-center justify-center bg-background p-4">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={service.image_url}
+            alt={service.title}
+            className="max-h-full max-w-full object-contain"
+          />
+        </div>
       ) : null}
       <div className="p-6">
         <ServiceIcon name={service.icon} className="size-8 text-primary" />

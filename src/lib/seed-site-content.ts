@@ -17,7 +17,7 @@ export const SEED_SITE_CONTENT: SiteContent = {
     "Aviat Investment Limited is an aviation component maintenance company operating out of Wilson Airport, near Parapet. We focus exclusively on the critical safety equipment that keeps aircraft and crews protected: batteries, life vests, emergency power packs, locator beacons, and pressure vessels.\n\nOur team combines hands-on technical expertise with rigorous, standards-driven processes, so operators can trust that every component we touch meets the demands of real-world flight operations.",
   about_mission:
     "To deliver precise, dependable maintenance for aviation safety equipment, giving operators confidence in every takeoff, and every landing.",
-  about_image_url: null,
+  about_image_url: "/images/about-component-detail.jpg",
   contact_phone: "[PHONE NUMBER]",
   contact_email: "[EMAIL ADDRESS]",
   contact_address: "[STREET ADDRESS], Wilson Airport, Nairobi, Kenya",

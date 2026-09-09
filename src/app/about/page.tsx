@@ -40,8 +40,9 @@ export default async function AboutPage() {
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={siteContent.about_image_url}
-            alt="Aviat Investment Limited team and facility"
+            alt="Close-up of an aircraft battery cell during inspection"
             className="mb-12 aspect-video w-full rounded-2xl border border-card-border object-cover"
+            style={{ objectPosition: "center 25%" }}
           />
         )}
 
