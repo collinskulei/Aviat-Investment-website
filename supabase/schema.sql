@@ -162,6 +162,11 @@ where image_url in (
   '/images/services/ulb-battery-restoration.jpg'
 );
 
+-- The ULB beacon photo uploaded from the dashboard, re-cut the same way.
+update public.services
+set image_url = '/images/services/ulb-beacon.webp'
+where image_url like '%/site-media/service-e6a9489a-0def-45cf-a395-3c23ff77c320/1790934178319.jpeg';
+
 -- ---------------------------------------------------------------------------
 -- site_content: single-row table of editable copy (logo, hero, about,
 -- contact) managed from /admin-dashboard/content.
