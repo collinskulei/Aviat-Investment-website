@@ -18,9 +18,12 @@ content, form submissions, and admin auth, deployed on Vercel.
 - `/services` - full services list
 - `/services/[slug]` - individual service detail page
 - `/contact` - contact details + quote form (add `?service=Name` to preselect it)
-- `/admin-dashboard` - quote request inbox (requires Supabase Auth login)
-- `/admin-dashboard/services` - manage services shown on the site (with photo upload)
-- `/admin-dashboard/content` - edit the logo, hero, about, and contact copy/photos
+- `/admin-dashboard` - overview widgets (requires Supabase Auth login)
+- `/admin-dashboard/quotes` - quote request CRM: pipeline stage widgets, a searchable
+  list, and a page per request with call/WhatsApp/email, deal details, follow-up
+  dates, and an activity timeline
+- `/admin-dashboard/services` - a widget per service, each opening its editor (with photo upload)
+- `/admin-dashboard/content` - widgets for the logo, hero, about, contact, and Why Choose Us sections
 - `/aviat-admin` - admin sign-in via magic link (no password)
 - `/auth/callback` - completes the magic-link sign-in, then redirects to the dashboard
 
@@ -53,7 +56,9 @@ until it's connected.
    - `site_content` - the logo, hero, about, and contact copy edited from
      `/admin-dashboard/content`
    - `why_choose_us` - the three cards shown on Home/About
-   - `quote_requests` - submissions from the "Request a Service Quote" form
+   - `quote_requests` - submissions from the "Request a Service Quote" form,
+     plus CRM fields (stage, priority, quoted amount, follow-up date)
+   - `quote_activities` - the notes/calls/emails timeline for each quote request
    - The `site-media` Storage bucket, for logo/hero/about/service photo uploads
    - Row Level Security policies on all of the above (public can read active
      content and submit quote requests; only signed-in admins can write)

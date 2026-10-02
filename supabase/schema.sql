@@ -304,3 +304,77 @@ create policy "Admins can delete site media"
   on storage.objects for delete
   to authenticated
   using (bucket_id = 'site-media');
+
+-- ---------------------------------------------------------------------------
+-- Quote CRM: contact phone/company, a sales pipeline, deal details, and an
+-- activity timeline per quote. Managed from /admin-dashboard/quotes.
+-- ---------------------------------------------------------------------------
+alter table public.quote_requests add column if not exists phone text not null default '';
+alter table public.quote_requests add column if not exists company text not null default '';
+alter table public.quote_requests add column if not exists priority text not null default 'normal';
+alter table public.quote_requests add column if not exists quoted_amount numeric(12, 2);
+alter table public.quote_requests add column if not exists currency text not null default 'KES';
+alter table public.quote_requests add column if not exists follow_up_on date;
+alter table public.quote_requests add column if not exists updated_at timestamptz not null default now();
+
+-- Pipeline stages: new -> contacted -> quoted -> won / lost.
+-- The original "resolved" status becomes "won".
+alter table public.quote_requests drop constraint if exists quote_requests_status_check;
+update public.quote_requests set status = 'won' where status = 'resolved';
+alter table public.quote_requests add constraint quote_requests_status_check
+  check (status in ('new', 'contacted', 'quoted', 'won', 'lost'));
+
+alter table public.quote_requests drop constraint if exists quote_requests_priority_check;
+alter table public.quote_requests add constraint quote_requests_priority_check
+  check (priority in ('low', 'normal', 'high'));
+
+alter table public.quote_requests drop constraint if exists quote_requests_currency_check;
+alter table public.quote_requests add constraint quote_requests_currency_check
+  check (currency in ('KES', 'USD'));
+
+create index if not exists quote_requests_status_idx on public.quote_requests (status);
+create index if not exists quote_requests_follow_up_idx on public.quote_requests (follow_up_on);
+
+drop trigger if exists quote_requests_set_updated_at on public.quote_requests;
+create trigger quote_requests_set_updated_at
+  before update on public.quote_requests
+  for each row execute function public.set_updated_at();
+
+-- Admins can remove spam / duplicate requests.
+drop policy if exists "Admins can delete quote requests" on public.quote_requests;
+create policy "Admins can delete quote requests"
+  on public.quote_requests for delete
+  to authenticated
+  using (true);
+
+create table if not exists public.quote_activities (
+  id uuid primary key default gen_random_uuid(),
+  quote_id uuid not null references public.quote_requests (id) on delete cascade,
+  kind text not null default 'note' check (kind in ('note', 'call', 'email', 'meeting', 'status')),
+  body text not null,
+  author_email text,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists quote_activities_quote_idx
+  on public.quote_activities (quote_id, created_at desc);
+
+alter table public.quote_activities enable row level security;
+
+drop policy if exists "Admins can read quote activities" on public.quote_activities;
+create policy "Admins can read quote activities"
+  on public.quote_activities for select
+  to authenticated
+  using (true);
+
+drop policy if exists "Admins can add quote activities" on public.quote_activities;
+create policy "Admins can add quote activities"
+  on public.quote_activities for insert
+  to authenticated
+  with check (true);
+
+drop policy if exists "Admins can delete quote activities" on public.quote_activities;
+create policy "Admins can delete quote activities"
+  on public.quote_activities for delete
+  to authenticated
+  using (true);

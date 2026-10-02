@@ -17,6 +17,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  // Absolute base for the Open Graph image; Vercel provides the production domain.
+  metadataBase: process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? new URL(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`)
+    : undefined,
   title: "Aviat Investment Limited | Aviation Component Maintenance, Wilson Airport",
   description:
     "Specialist restoration, overhaul, and testing services for critical aircraft components. Trusted expertise located at Wilson Airport.",

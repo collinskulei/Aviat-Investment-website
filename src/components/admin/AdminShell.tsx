@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
-import { ExternalLink, FileText, LayoutDashboard, Menu, Wrench, X } from "lucide-react";
+import { ClipboardList, ExternalLink, FileText, LayoutDashboard, Menu, Wrench, X } from "lucide-react";
 import { logout } from "@/app/aviat-admin/actions";
 import { BrandLogo } from "@/components/BrandLogo";
 import { AdminFeedbackProvider } from "@/components/admin/AdminFeedback";
 
 const NAV_ITEMS = [
-  { href: "/admin-dashboard", label: "Quote Requests", icon: LayoutDashboard },
+  { href: "/admin-dashboard", label: "Overview", icon: LayoutDashboard },
+  { href: "/admin-dashboard/quotes", label: "Quote Requests", icon: ClipboardList },
   { href: "/admin-dashboard/services", label: "Services", icon: Wrench },
   { href: "/admin-dashboard/content", label: "Site Content", icon: FileText },
 ];
@@ -21,7 +22,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const nav = (onNavigate?: () => void) => (
     <nav className="space-y-1">
       {NAV_ITEMS.map((item) => {
-        const active = pathname === item.href;
+        // Overview matches exactly; each tab stays highlighted on its drill-down pages.
+        const active =
+          item.href === "/admin-dashboard"
+            ? pathname === item.href
+            : pathname === item.href || pathname.startsWith(`${item.href}/`);
         const Icon = item.icon;
         return (
           <Link

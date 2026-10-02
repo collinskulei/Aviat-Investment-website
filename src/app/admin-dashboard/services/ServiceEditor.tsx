@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { deleteService, upsertService } from "../actions";
+import { useRouter } from "next/navigation";
+import { deleteService, upsertService } from "./actions";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { useAdminAction } from "@/components/admin/AdminFeedback";
 import { ActionStatus } from "@/components/admin/ActionStatus";
@@ -25,18 +25,18 @@ const AVAILABLE_ICONS = [
 
 export function ServiceEditor({ service }: { service?: Service }) {
   const [pending, run, lastResult] = useAdminAction();
-  const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
   const isNew = !service;
 
   return (
     <form
-      ref={formRef}
       onSubmit={(e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         run(() => upsertService(formData), {
-          onSuccess: () => {
-            if (isNew) formRef.current?.reset();
+          // New services get their own page; open it so a photo can be added.
+          onSuccess: (result) => {
+            if (isNew && result.id) router.push(`/admin-dashboard/services/${result.id}`);
           },
         });
       }}
@@ -51,14 +51,16 @@ export function ServiceEditor({ service }: { service?: Service }) {
       {service && <input type="hidden" name="id" value={service.id} />}
 
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold">{isNew ? "Add a new service" : service!.title}</h3>
+        <h3 className="font-semibold">Service details</h3>
         {!isNew && (
           <button
             type="button"
             disabled={pending}
             onClick={() => {
               if (confirm(`Delete "${service!.title}"? This can't be undone.`)) {
-                run(() => deleteService(service!.id));
+                run(() => deleteService(service!.id), {
+                  onSuccess: () => router.push("/admin-dashboard/services"),
+                });
               }
             }}
             className="text-xs font-medium text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 disabled:opacity-60"
@@ -89,7 +91,9 @@ export function ServiceEditor({ service }: { service?: Service }) {
         </div>
       </div>
 
-      {!isNew && (
+      {isNew ? (
+        <p className="mt-4 text-xs text-muted">You can add a photo once the service is created.</p>
+      ) : (
         <div className="mt-4">
           <ImageUploadField
             target={`service:${service!.id}`}

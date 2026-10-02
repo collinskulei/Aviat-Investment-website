@@ -57,6 +57,33 @@ export function QuoteForm({
             className={inputClasses}
           />
         </div>
+        <div>
+          <label htmlFor="phone" className="mb-1.5 block text-sm font-medium text-foreground">
+            Phone Number
+          </label>
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            required
+            autoComplete="tel"
+            placeholder="+254 7XX XXX XXX"
+            className={inputClasses}
+          />
+        </div>
+        <div>
+          <label htmlFor="company" className="mb-1.5 block text-sm font-medium text-foreground">
+            Company / Operator <span className="font-normal text-muted">(optional)</span>
+          </label>
+          <input
+            id="company"
+            name="company"
+            type="text"
+            autoComplete="organization"
+            placeholder="Airline or operator name"
+            className={inputClasses}
+          />
+        </div>
       </div>
 
       <div>

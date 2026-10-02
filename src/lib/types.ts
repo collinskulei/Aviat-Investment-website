@@ -12,15 +12,35 @@ export type Service = {
   updated_at: string;
 };
 
-export type QuoteRequestStatus = "new" | "contacted" | "resolved";
+export type QuoteRequestStatus = "new" | "contacted" | "quoted" | "won" | "lost";
+export type QuotePriority = "low" | "normal" | "high";
+export type QuoteCurrency = "KES" | "USD";
 
 export type QuoteRequest = {
   id: string;
   full_name: string;
   email: string;
+  phone: string;
+  company: string;
   service: string;
   message: string;
   status: QuoteRequestStatus;
+  priority: QuotePriority;
+  quoted_amount: number | null;
+  currency: QuoteCurrency;
+  follow_up_on: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type QuoteActivityKind = "note" | "call" | "email" | "meeting" | "status";
+
+export type QuoteActivity = {
+  id: string;
+  quote_id: string;
+  kind: QuoteActivityKind;
+  body: string;
+  author_email: string | null;
   created_at: string;
 };
 
@@ -53,4 +73,4 @@ export type SiteContent = {
 };
 
 /** Result returned by admin dashboard actions, shown to the user as a toast. */
-export type ActionResult = { ok: boolean; message: string };
+export type ActionResult = { ok: boolean; message: string; id?: string };

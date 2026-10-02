@@ -19,16 +19,27 @@ export async function submitQuoteRequest(
 
   const full_name = String(formData.get("full_name") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
+  const phone = String(formData.get("phone") ?? "").trim();
+  const company = String(formData.get("company") ?? "").trim();
   const service = String(formData.get("service") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
 
-  if (!full_name || !email || !service) {
-    return { status: "error", message: "Please fill in your name, email, and service required." };
+  if (!full_name || !email || !phone || !service) {
+    return {
+      status: "error",
+      message: "Please fill in your name, email, phone number, and service required.",
+    };
   }
 
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailPattern.test(email)) {
     return { status: "error", message: "Please enter a valid email address." };
+  }
+
+  // Allow +, spaces, dashes, dots and brackets, but require 7-15 digits.
+  const phoneDigits = phone.replace(/\D/g, "");
+  if (!/^[\d\s+().-]+$/.test(phone) || phoneDigits.length < 7 || phoneDigits.length > 15) {
+    return { status: "error", message: "Please enter a valid phone number." };
   }
 
   if (!isSupabaseConfigured) {
@@ -42,6 +53,8 @@ export async function submitQuoteRequest(
   const { error } = await supabase.from("quote_requests").insert({
     full_name,
     email,
+    phone,
+    company,
     service,
     message,
   });

@@ -4,20 +4,28 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type { ActionResult } from "@/lib/types";
 
+const EDITABLE_FIELDS = [
+  "hero_headline",
+  "hero_subheadline",
+  "hero_tagline",
+  "about_intro",
+  "about_mission",
+  "contact_phone",
+  "contact_email",
+  "contact_address",
+  "contact_hours",
+] as const;
+
 export async function updateSiteContent(formData: FormData): Promise<ActionResult> {
   const supabase = await createClient();
 
-  const payload = {
-    hero_headline: String(formData.get("hero_headline") ?? "").trim(),
-    hero_subheadline: String(formData.get("hero_subheadline") ?? "").trim(),
-    hero_tagline: String(formData.get("hero_tagline") ?? "").trim(),
-    about_intro: String(formData.get("about_intro") ?? "").trim(),
-    about_mission: String(formData.get("about_mission") ?? "").trim(),
-    contact_phone: String(formData.get("contact_phone") ?? "").trim(),
-    contact_email: String(formData.get("contact_email") ?? "").trim(),
-    contact_address: String(formData.get("contact_address") ?? "").trim(),
-    contact_hours: String(formData.get("contact_hours") ?? "").trim(),
-  };
+  // Each section page submits only its own fields, so only write the fields
+  // present in this submission and leave the rest untouched.
+  const payload: Record<string, string> = {};
+  for (const field of EDITABLE_FIELDS) {
+    const value = formData.get(field);
+    if (value !== null) payload[field] = String(value).trim();
+  }
 
   // Upsert (not update) so this still works even if the seed row from
   // supabase/schema.sql was never created.
@@ -29,7 +37,6 @@ export async function updateSiteContent(formData: FormData): Promise<ActionResul
   }
 
   revalidatePath("/", "layout");
-  revalidatePath("/admin-dashboard/content");
 
   return { ok: true, message: "Site content saved." };
 }
@@ -46,19 +53,22 @@ export async function upsertWhyChooseUsItem(formData: FormData): Promise<ActionR
     is_active: formData.get("is_active") === "on",
   };
 
-  const { error } = id
-    ? await supabase.from("why_choose_us").update(payload).eq("id", id)
-    : await supabase.from("why_choose_us").insert(payload);
+  const { data, error } = id
+    ? await supabase.from("why_choose_us").update(payload).eq("id", id).select("id").single()
+    : await supabase.from("why_choose_us").insert(payload).select("id").single();
 
   if (error) {
     console.error("[content] Failed to save why_choose_us card:", error.message);
     return { ok: false, message: "Couldn't save the card. Please try again." };
   }
 
-  revalidatePath("/admin-dashboard/content");
   revalidatePath("/", "layout");
 
-  return { ok: true, message: id ? `"${payload.title}" saved.` : `"${payload.title}" added.` };
+  return {
+    ok: true,
+    message: id ? `"${payload.title}" saved.` : `"${payload.title}" added.`,
+    id: data?.id ?? id,
+  };
 }
 
 export async function deleteWhyChooseUsItem(id: string): Promise<ActionResult> {
@@ -70,7 +80,6 @@ export async function deleteWhyChooseUsItem(id: string): Promise<ActionResult> {
     return { ok: false, message: "Couldn't delete the card. Please try again." };
   }
 
-  revalidatePath("/admin-dashboard/content");
   revalidatePath("/", "layout");
 
   return { ok: true, message: "Card deleted." };

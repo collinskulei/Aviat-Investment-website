@@ -15,7 +15,7 @@ import { CheckCircle2, CircleAlert, X } from "lucide-react";
 import { ProgressBar } from "@/components/admin/ProgressBar";
 import type { ActionResult } from "@/lib/types";
 
-type Toast = ActionResult & { id: number };
+type Toast = { key: number; ok: boolean; message: string };
 
 type FeedbackContext = {
   notify: (result: ActionResult) => void;
@@ -34,15 +34,15 @@ export function AdminFeedbackProvider({ children }: { children: ReactNode }) {
   const [busyCount, setBusyCount] = useState(0);
   const nextId = useRef(0);
 
-  const dismiss = useCallback((id: number) => {
-    setToasts((current) => current.filter((t) => t.id !== id));
+  const dismiss = useCallback((key: number) => {
+    setToasts((current) => current.filter((t) => t.key !== key));
   }, []);
 
   const notify = useCallback(
     (result: ActionResult) => {
-      const id = ++nextId.current;
-      setToasts((current) => [...current, { ...result, id }]);
-      setTimeout(() => dismiss(id), result.ok ? SUCCESS_TOAST_MS : ERROR_TOAST_MS);
+      const key = ++nextId.current;
+      setToasts((current) => [...current, { key, ok: result.ok, message: result.message }]);
+      setTimeout(() => dismiss(key), result.ok ? SUCCESS_TOAST_MS : ERROR_TOAST_MS);
     },
     [dismiss]
   );
@@ -69,7 +69,7 @@ export function AdminFeedbackProvider({ children }: { children: ReactNode }) {
       >
         {toasts.map((toast) => (
           <div
-            key={toast.id}
+            key={toast.key}
             role={toast.ok ? "status" : "alert"}
             className={`pointer-events-auto flex items-start gap-3 rounded-xl border bg-card p-4 text-sm shadow-lg ${
               toast.ok ? "border-emerald-500/40" : "border-red-500/40"
@@ -83,7 +83,7 @@ export function AdminFeedbackProvider({ children }: { children: ReactNode }) {
             <p className="flex-1 text-foreground">{toast.message}</p>
             <button
               type="button"
-              onClick={() => dismiss(toast.id)}
+              onClick={() => dismiss(toast.key)}
               aria-label="Dismiss"
               className="shrink-0 text-muted hover:text-foreground"
             >
@@ -126,7 +126,7 @@ export function useAdminAction() {
   const run = useCallback(
     (
       action: () => Promise<ActionResult>,
-      callbacks?: { onSuccess?: () => void; onError?: () => void }
+      callbacks?: { onSuccess?: (result: ActionResult) => void; onError?: () => void }
     ) => {
       setLastResult(null);
       startTransition(async () => {
@@ -138,7 +138,7 @@ export function useAdminAction() {
         }
         notify(result);
         setLastResult(result);
-        if (result.ok) callbacks?.onSuccess?.();
+        if (result.ok) callbacks?.onSuccess?.(result);
         else callbacks?.onError?.();
       });
     },

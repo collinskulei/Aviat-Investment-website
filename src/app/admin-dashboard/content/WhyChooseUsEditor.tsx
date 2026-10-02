@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRouter } from "next/navigation";
 import { deleteWhyChooseUsItem, upsertWhyChooseUsItem } from "./actions";
 import { useAdminAction } from "@/components/admin/AdminFeedback";
 import { ActionStatus } from "@/components/admin/ActionStatus";
@@ -24,18 +24,17 @@ const AVAILABLE_ICONS = [
 
 export function WhyChooseUsEditor({ item }: { item?: WhyChooseUsItem }) {
   const [pending, run, lastResult] = useAdminAction();
-  const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
   const isNew = !item;
 
   return (
     <form
-      ref={formRef}
       onSubmit={(e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         run(() => upsertWhyChooseUsItem(formData), {
-          onSuccess: () => {
-            if (isNew) formRef.current?.reset();
+          onSuccess: (result) => {
+            if (isNew && result.id) router.push(`/admin-dashboard/content/why-choose-us/${result.id}`);
           },
         });
       }}
@@ -50,14 +49,16 @@ export function WhyChooseUsEditor({ item }: { item?: WhyChooseUsItem }) {
       {item && <input type="hidden" name="id" value={item.id} />}
 
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold">{isNew ? "Add a new card" : item!.title}</h3>
+        <h3 className="font-semibold">Card details</h3>
         {!isNew && (
           <button
             type="button"
             disabled={pending}
             onClick={() => {
               if (confirm(`Delete "${item!.title}"? This can't be undone.`)) {
-                run(() => deleteWhyChooseUsItem(item!.id));
+                run(() => deleteWhyChooseUsItem(item!.id), {
+                  onSuccess: () => router.push("/admin-dashboard/content/why-choose-us"),
+                });
               }
             }}
             className="text-xs font-medium text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 disabled:opacity-60"

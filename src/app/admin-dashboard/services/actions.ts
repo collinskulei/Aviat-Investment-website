@@ -2,26 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import type { ActionResult, QuoteRequestStatus } from "@/lib/types";
+import type { ActionResult } from "@/lib/types";
 
 // Postgres unique_violation - e.g. a service slug that's already taken.
 const UNIQUE_VIOLATION = "23505";
-
-export async function updateQuoteStatus(
-  id: string,
-  status: QuoteRequestStatus
-): Promise<ActionResult> {
-  const supabase = await createClient();
-  const { error } = await supabase.from("quote_requests").update({ status }).eq("id", id);
-
-  if (error) {
-    console.error("[quotes] Failed to update status:", error.message);
-    return { ok: false, message: "Couldn't update the status. Please try again." };
-  }
-
-  revalidatePath("/admin-dashboard");
-  return { ok: true, message: `Quote marked as ${status}.` };
-}
 
 export async function upsertService(formData: FormData): Promise<ActionResult> {
   const supabase = await createClient();
@@ -37,9 +21,9 @@ export async function upsertService(formData: FormData): Promise<ActionResult> {
     is_active: formData.get("is_active") === "on",
   };
 
-  const { error } = id
-    ? await supabase.from("services").update(payload).eq("id", id)
-    : await supabase.from("services").insert(payload);
+  const { data, error } = id
+    ? await supabase.from("services").update(payload).eq("id", id).select("id").single()
+    : await supabase.from("services").insert(payload).select("id").single();
 
   if (error) {
     console.error("[services] Failed to save service:", error.message);
@@ -52,11 +36,15 @@ export async function upsertService(formData: FormData): Promise<ActionResult> {
     };
   }
 
-  revalidatePath("/admin-dashboard/services");
+  revalidatePath("/admin-dashboard", "layout");
   revalidatePath("/services", "layout");
   revalidatePath("/");
 
-  return { ok: true, message: id ? `"${payload.title}" saved.` : `"${payload.title}" added.` };
+  return {
+    ok: true,
+    message: id ? `"${payload.title}" saved.` : `"${payload.title}" added.`,
+    id: data?.id ?? id,
+  };
 }
 
 export async function deleteService(id: string): Promise<ActionResult> {
@@ -68,7 +56,7 @@ export async function deleteService(id: string): Promise<ActionResult> {
     return { ok: false, message: "Couldn't delete the service. Please try again." };
   }
 
-  revalidatePath("/admin-dashboard/services");
+  revalidatePath("/admin-dashboard", "layout");
   revalidatePath("/services", "layout");
   revalidatePath("/");
 
