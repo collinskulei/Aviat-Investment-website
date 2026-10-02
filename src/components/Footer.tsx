@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { NAV_LINKS, SITE_NAME, SITE_NAME_FULL } from "@/lib/constants";
 import type { SiteContent } from "@/lib/types";
+import { BrandLogo } from "@/components/BrandLogo";
 
 // Footer stays black regardless of the site's light/dark theme.
 export function Footer({ siteContent }: { siteContent: SiteContent }) {
@@ -16,9 +17,9 @@ export function Footer({ siteContent }: { siteContent: SiteContent }) {
               <img src={siteContent.logo_url} alt={SITE_NAME} className="h-8 w-auto" />
             </div>
           ) : (
-            <p className="text-lg font-bold text-white">{SITE_NAME_FULL}</p>
+            <BrandLogo variant="dark" className="h-16 w-auto" />
           )}
-          <p className="mt-2 text-sm text-zinc-400">
+          <p className="mt-4 text-sm text-zinc-400">
             Specialist restoration, overhaul, and testing services for critical aircraft
             components.
           </p>

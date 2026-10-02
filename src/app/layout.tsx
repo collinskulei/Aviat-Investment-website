@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   title: "Aviat Investment Limited | Aviation Component Maintenance, Wilson Airport",
   description:
     "Specialist restoration, overhaul, and testing services for critical aircraft components. Trusted expertise located at Wilson Airport.",
+  openGraph: {
+    images: [{ url: "/images/logo/logo-light.png", width: 768, height: 366, alt: "Aviat Investment Limited" }],
+  },
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

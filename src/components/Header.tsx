@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { NAV_LINKS, SITE_NAME } from "@/lib/constants";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export function Header({ logoUrl }: { logoUrl?: string | null }) {
   const pathname = usePathname();
@@ -13,13 +14,13 @@ export function Header({ logoUrl }: { logoUrl?: string | null }) {
 
   return (
     <header className="sticky top-0 z-50 border-b border-card-border bg-background/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-center text-lg font-bold tracking-tight text-foreground">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+        <Link href="/" className="flex items-center" aria-label={`${SITE_NAME} home`}>
           {logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={logoUrl} alt={SITE_NAME} className="h-9 w-auto" />
+            <img src={logoUrl} alt={SITE_NAME} className="h-11 w-auto sm:h-12" />
           ) : (
-            SITE_NAME
+            <BrandLogo className="h-11 w-auto sm:h-12" />
           )}
         </Link>
 

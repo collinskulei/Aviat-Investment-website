@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { FileText, LayoutDashboard, Menu, Wrench, X } from "lucide-react";
 import { logout } from "@/app/aviat-admin/actions";
+import { BrandLogo } from "@/components/BrandLogo";
 
 const NAV_ITEMS = [
   { href: "/admin-dashboard", label: "Quote Requests", icon: LayoutDashboard },
@@ -45,7 +46,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
       {/* Desktop sidebar */}
       <aside className="hidden w-64 shrink-0 border-r border-card-border bg-card md:flex md:flex-col">
         <div className="px-5 py-6">
-          <p className="text-sm font-semibold uppercase tracking-wide text-muted">Aviat Admin</p>
+          <Link href="/" aria-label="View public site">
+            <BrandLogo className="h-12 w-auto" />
+          </Link>
+          <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted">Admin</p>
         </div>
         <div className="flex-1 px-3">{nav()}</div>
         <div className="border-t border-card-border p-3">
@@ -62,8 +66,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
 
       {/* Mobile top bar */}
       <div className="border-b border-card-border bg-card md:hidden">
-        <div className="flex items-center justify-between px-4 py-3.5">
-          <p className="text-sm font-semibold uppercase tracking-wide text-muted">Aviat Admin</p>
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center gap-3">
+            <BrandLogo className="h-9 w-auto" />
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Admin</p>
+          </div>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}

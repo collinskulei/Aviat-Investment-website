@@ -1,4 +1,5 @@
 import { LoginForm } from "./LoginForm";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export default async function LoginPage({
   searchParams,
@@ -10,6 +11,7 @@ export default async function LoginPage({
   return (
     <div className="flex min-h-[70vh] items-center justify-center px-6 py-16">
       <div className="w-full max-w-sm rounded-2xl border border-card-border bg-card p-8">
+        <BrandLogo className="mb-6 h-14 w-auto" />
         <h1 className="text-xl font-bold">Admin Sign In</h1>
         <p className="mt-1 text-sm text-muted">Aviat Investment Limited admin dashboard.</p>
         <div className="mt-6">
