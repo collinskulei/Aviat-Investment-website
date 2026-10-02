@@ -149,6 +149,19 @@ on conflict (slug) do nothing;
 -- ---------------------------------------------------------------------------
 alter table public.services add column if not exists image_url text;
 
+-- The bundled service photos were re-cut with transparent backgrounds (WebP)
+-- so they sit cleanly on both light and dark themes. Only rows still pointing
+-- at the original bundled JPGs change; admin uploads are left alone.
+update public.services
+set image_url = regexp_replace(image_url, '\.jpg$', '.webp')
+where image_url in (
+  '/images/services/aircraft-battery-maintenance.jpg',
+  '/images/services/emergency-power-packs.jpg',
+  '/images/services/life-vest-servicing.jpg',
+  '/images/services/oxygen-cylinder-overhaul.jpg',
+  '/images/services/ulb-battery-restoration.jpg'
+);
+
 -- ---------------------------------------------------------------------------
 -- site_content: single-row table of editable copy (logo, hero, about,
 -- contact) managed from /admin-dashboard/content.

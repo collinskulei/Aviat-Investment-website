@@ -6,19 +6,19 @@
 -- since uploaded through /admin-dashboard. Safe to run more than once by
 -- itself, just don't fold it into routine schema.sql re-runs.
 
-update public.services set image_url = '/images/services/aircraft-battery-maintenance.jpg'
+update public.services set image_url = '/images/services/aircraft-battery-maintenance.webp'
   where slug = 'aircraft-battery-maintenance' and image_url is null;
 
-update public.services set image_url = '/images/services/life-vest-servicing.jpg'
+update public.services set image_url = '/images/services/life-vest-servicing.webp'
   where slug = 'life-vest-servicing' and image_url is null;
 
-update public.services set image_url = '/images/services/emergency-power-packs.jpg'
+update public.services set image_url = '/images/services/emergency-power-packs.webp'
   where slug = 'emergency-power-packs' and image_url is null;
 
-update public.services set image_url = '/images/services/ulb-battery-restoration.jpg'
+update public.services set image_url = '/images/services/ulb-battery-restoration.webp'
   where slug = 'ulb-battery-restoration' and image_url is null;
 
-update public.services set image_url = '/images/services/oxygen-cylinder-overhaul.jpg'
+update public.services set image_url = '/images/services/oxygen-cylinder-overhaul.webp'
   where slug = 'oxygen-cylinder-overhaul' and image_url is null;
 
 -- Hydrostatic Testing intentionally has no matching photo among the ones
