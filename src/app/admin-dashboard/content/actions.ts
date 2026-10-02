@@ -2,13 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import type { ActionResult } from "@/lib/types";
 
-export type SaveState = { status: "idle" | "success" | "error"; message: string | null };
-
-export async function updateSiteContent(
-  _prevState: SaveState,
-  formData: FormData
-): Promise<SaveState> {
+export async function updateSiteContent(formData: FormData): Promise<ActionResult> {
   const supabase = await createClient();
 
   const payload = {
@@ -29,16 +25,16 @@ export async function updateSiteContent(
 
   if (error) {
     console.error("[content] Failed to update site_content:", error.message);
-    return { status: "error", message: "Couldn't save changes. Please try again." };
+    return { ok: false, message: "Couldn't save changes. Please try again." };
   }
 
   revalidatePath("/", "layout");
   revalidatePath("/admin-dashboard/content");
 
-  return { status: "success", message: "Content saved." };
+  return { ok: true, message: "Site content saved." };
 }
 
-export async function upsertWhyChooseUsItem(formData: FormData) {
+export async function upsertWhyChooseUsItem(formData: FormData): Promise<ActionResult> {
   const supabase = await createClient();
 
   const id = String(formData.get("id") ?? "");
@@ -50,19 +46,32 @@ export async function upsertWhyChooseUsItem(formData: FormData) {
     is_active: formData.get("is_active") === "on",
   };
 
-  if (id) {
-    await supabase.from("why_choose_us").update(payload).eq("id", id);
-  } else {
-    await supabase.from("why_choose_us").insert(payload);
+  const { error } = id
+    ? await supabase.from("why_choose_us").update(payload).eq("id", id)
+    : await supabase.from("why_choose_us").insert(payload);
+
+  if (error) {
+    console.error("[content] Failed to save why_choose_us card:", error.message);
+    return { ok: false, message: "Couldn't save the card. Please try again." };
   }
 
   revalidatePath("/admin-dashboard/content");
   revalidatePath("/", "layout");
+
+  return { ok: true, message: id ? `"${payload.title}" saved.` : `"${payload.title}" added.` };
 }
 
-export async function deleteWhyChooseUsItem(id: string) {
+export async function deleteWhyChooseUsItem(id: string): Promise<ActionResult> {
   const supabase = await createClient();
-  await supabase.from("why_choose_us").delete().eq("id", id);
+  const { error } = await supabase.from("why_choose_us").delete().eq("id", id);
+
+  if (error) {
+    console.error("[content] Failed to delete why_choose_us card:", error.message);
+    return { ok: false, message: "Couldn't delete the card. Please try again." };
+  }
+
   revalidatePath("/admin-dashboard/content");
   revalidatePath("/", "layout");
+
+  return { ok: true, message: "Card deleted." };
 }

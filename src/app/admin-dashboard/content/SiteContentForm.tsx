@@ -1,11 +1,11 @@
 "use client";
 
-import { useActionState } from "react";
-import { updateSiteContent, type SaveState } from "./actions";
+import { updateSiteContent } from "./actions";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
+import { useAdminAction } from "@/components/admin/AdminFeedback";
+import { ActionStatus } from "@/components/admin/ActionStatus";
+import { ProgressBar } from "@/components/admin/ProgressBar";
 import type { SiteContent } from "@/lib/types";
-
-const initialState: SaveState = { status: "idle", message: null };
 
 const inputClasses =
   "w-full rounded-lg border border-card-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted focus:border-primary focus:outline-none";
@@ -38,15 +38,23 @@ function Field({
 }
 
 export function SiteContentForm({ content }: { content: SiteContent }) {
-  const [state, formAction, pending] = useActionState(updateSiteContent, initialState);
+  const [pending, run, lastResult] = useAdminAction();
 
   return (
-    <form action={formAction} className="space-y-10">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        run(() => updateSiteContent(formData));
+      }}
+      aria-busy={pending}
+      className="space-y-10"
+    >
       <section className="rounded-xl border border-card-border bg-card p-6">
         <h2 className="font-semibold">Logo</h2>
         <p className="mt-1 text-sm text-muted">
-          Shown in the header and (on a light badge) the footer. Leave unset to use the text
-          wordmark instead.
+          Shown in the header and (on a light badge) the footer. Leave unset to use the
+          built-in Aviat Investment Limited logo, which adapts to light and dark mode.
         </p>
         <div className="mt-4">
           <ImageUploadField target="logo" currentUrl={content.logo_url} label="Logo image" aspect="aspect-[3/1]" />
@@ -109,20 +117,18 @@ export function SiteContentForm({ content }: { content: SiteContent }) {
         </div>
       </section>
 
-      <div className="flex items-center gap-4">
-        <button
-          type="submit"
-          disabled={pending}
-          className="btn-fade rounded-lg px-6 py-2.5 text-sm font-semibold disabled:opacity-60"
-        >
-          {pending ? "Saving..." : "Save Content"}
-        </button>
-        {state.status === "success" && (
-          <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">{state.message}</p>
-        )}
-        {state.status === "error" && (
-          <p className="text-sm font-medium text-red-600 dark:text-red-400">{state.message}</p>
-        )}
+      <div className="sticky bottom-0 rounded-xl border border-card-border bg-background/95 px-4 py-3 backdrop-blur">
+        {pending && <ProgressBar label="Saving site content" className="mb-3 h-1.5 rounded-full" />}
+        <div className="flex flex-wrap items-center gap-4">
+          <button
+            type="submit"
+            disabled={pending}
+            className="btn-fade rounded-lg px-6 py-2.5 text-sm font-semibold disabled:opacity-60"
+          >
+            {pending ? "Saving..." : "Save Content"}
+          </button>
+          <ActionStatus result={lastResult} />
+        </div>
       </div>
     </form>
   );

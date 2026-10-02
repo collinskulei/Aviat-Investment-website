@@ -2,56 +2,27 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import type { ActionResult } from "@/lib/types";
 
-export type UploadState = {
-  status: "idle" | "success" | "error";
-  message: string | null;
-  url: string | null;
-};
-
-const MAX_FILE_BYTES = 5 * 1024 * 1024; // 5MB
+export type MediaSaveResult = ActionResult & { url: string | null };
 
 /**
- * Uploads an image to the `site-media` Supabase Storage bucket and writes
- * its public URL onto whichever row/column `target` names, so every image
- * on the site (logo, hero, about photo, per-service photo) goes through
- * this one action instead of a bespoke uploader per field.
+ * Every image on the site (logo, hero, about photo, per-service photo) is
+ * uploaded straight from the browser to the `site-media` Supabase Storage
+ * bucket (so the dashboard can show real upload progress), then this action
+ * writes the file's public URL onto whichever row/column `target` names.
  *
  * `target` is one of: "logo" | "hero" | "about" | "service:<id>"
  */
-export async function uploadSiteMedia(
-  _prevState: UploadState,
-  formData: FormData
-): Promise<UploadState> {
-  const file = formData.get("file");
-  const target = String(formData.get("target") ?? "");
-
-  if (!(file instanceof File) || file.size === 0) {
-    return { status: "error", message: "Please choose an image file.", url: null };
-  }
-  if (!file.type.startsWith("image/")) {
-    return { status: "error", message: "That file isn't an image.", url: null };
-  }
-  if (file.size > MAX_FILE_BYTES) {
-    return { status: "error", message: "Images must be 5MB or smaller.", url: null };
+export async function saveSiteMedia(target: string, path: string): Promise<MediaSaveResult> {
+  // Uploads are always stored under a folder named after their target
+  // (see mediaFolder in ImageUploadField); reject anything else.
+  const folder = target.replace(/[^a-zA-Z0-9-]/g, "-");
+  if (!path.startsWith(`${folder}/`) || path.includes("..")) {
+    return { ok: false, message: "Invalid upload. Please try again.", url: null };
   }
 
   const supabase = await createClient();
-
-  const rawExt = file.name.includes(".") ? file.name.split(".").pop() ?? "" : "";
-  const ext = /^[a-zA-Z0-9]{1,5}$/.test(rawExt) ? rawExt.toLowerCase() : "jpg";
-  const safeTarget = target.replace(/[^a-zA-Z0-9-]/g, "-");
-  const path = `${safeTarget}/${Date.now()}.${ext}`;
-
-  const { error: uploadError } = await supabase.storage
-    .from("site-media")
-    .upload(path, file, { upsert: true, contentType: file.type });
-
-  if (uploadError) {
-    console.error("[media] Supabase Storage upload error:", uploadError.message);
-    return { status: "error", message: "Upload failed. Please try again.", url: null };
-  }
-
   const {
     data: { publicUrl },
   } = supabase.storage.from("site-media").getPublicUrl(path);
@@ -71,17 +42,19 @@ export async function uploadSiteMedia(
       .update({ image_url: publicUrl })
       .eq("id", serviceId);
     dbError = error?.message ?? null;
+  } else {
+    return { ok: false, message: "Unknown image field.", url: null };
   }
 
   if (dbError) {
     console.error("[media] Failed to save image URL:", dbError);
-    return { status: "error", message: "Image uploaded, but saving it failed. Try again.", url: null };
+    return { ok: false, message: "Image uploaded, but saving it failed. Try again.", url: null };
   }
 
   revalidatePath("/", "layout");
   revalidatePath("/admin-dashboard", "layout");
 
-  return { status: "success", message: "Image updated.", url: publicUrl };
+  return { ok: true, message: "Image uploaded and published.", url: publicUrl };
 }
 
 async function setSiteContentField(

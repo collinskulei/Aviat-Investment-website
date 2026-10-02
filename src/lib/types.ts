@@ -51,3 +51,6 @@ export type SiteContent = {
   contact_hours: string;
   updated_at: string;
 };
+
+/** Result returned by admin dashboard actions, shown to the user as a toast. */
+export type ActionResult = { ok: boolean; message: string };

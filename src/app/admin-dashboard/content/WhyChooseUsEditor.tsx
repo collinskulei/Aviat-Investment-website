@@ -1,7 +1,10 @@
 "use client";
 
-import { useTransition } from "react";
+import { useRef } from "react";
 import { deleteWhyChooseUsItem, upsertWhyChooseUsItem } from "./actions";
+import { useAdminAction } from "@/components/admin/AdminFeedback";
+import { ActionStatus } from "@/components/admin/ActionStatus";
+import { ProgressBar } from "@/components/admin/ProgressBar";
 import type { WhyChooseUsItem } from "@/lib/types";
 
 const inputClasses =
@@ -20,11 +23,30 @@ const AVAILABLE_ICONS = [
 ];
 
 export function WhyChooseUsEditor({ item }: { item?: WhyChooseUsItem }) {
-  const [pending, startTransition] = useTransition();
+  const [pending, run, lastResult] = useAdminAction();
+  const formRef = useRef<HTMLFormElement>(null);
   const isNew = !item;
 
   return (
-    <form action={upsertWhyChooseUsItem} className="rounded-xl border border-card-border bg-card p-6">
+    <form
+      ref={formRef}
+      onSubmit={(e) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        run(() => upsertWhyChooseUsItem(formData), {
+          onSuccess: () => {
+            if (isNew) formRef.current?.reset();
+          },
+        });
+      }}
+      aria-busy={pending}
+      className="relative overflow-hidden rounded-xl border border-card-border bg-card p-6"
+    >
+      {pending && (
+        <div className="absolute inset-x-0 top-0">
+          <ProgressBar label="Saving card" className="h-1 rounded-none" />
+        </div>
+      )}
       {item && <input type="hidden" name="id" value={item.id} />}
 
       <div className="flex items-center justify-between">
@@ -33,7 +55,11 @@ export function WhyChooseUsEditor({ item }: { item?: WhyChooseUsItem }) {
           <button
             type="button"
             disabled={pending}
-            onClick={() => startTransition(() => deleteWhyChooseUsItem(item!.id))}
+            onClick={() => {
+              if (confirm(`Delete "${item!.title}"? This can't be undone.`)) {
+                run(() => deleteWhyChooseUsItem(item!.id));
+              }
+            }}
             className="text-xs font-medium text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 disabled:opacity-60"
           >
             Delete
@@ -80,9 +106,16 @@ export function WhyChooseUsEditor({ item }: { item?: WhyChooseUsItem }) {
         </div>
       </div>
 
-      <button type="submit" className="btn-fade mt-5 rounded-lg px-5 py-2 text-sm font-semibold">
-        {isNew ? "Add Card" : "Save Changes"}
-      </button>
+      <div className="mt-5 flex flex-wrap items-center gap-4">
+        <button
+          type="submit"
+          disabled={pending}
+          className="btn-fade rounded-lg px-5 py-2 text-sm font-semibold disabled:opacity-60"
+        >
+          {pending ? "Saving..." : isNew ? "Add Card" : "Save Changes"}
+        </button>
+        <ActionStatus result={lastResult} />
+      </div>
     </form>
   );
 }

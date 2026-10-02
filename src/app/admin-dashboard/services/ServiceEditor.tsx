@@ -1,8 +1,11 @@
 "use client";
 
-import { useTransition } from "react";
+import { useRef } from "react";
 import { deleteService, upsertService } from "../actions";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
+import { useAdminAction } from "@/components/admin/AdminFeedback";
+import { ActionStatus } from "@/components/admin/ActionStatus";
+import { ProgressBar } from "@/components/admin/ProgressBar";
 import type { Service } from "@/lib/types";
 
 const inputClasses =
@@ -21,14 +24,30 @@ const AVAILABLE_ICONS = [
 ];
 
 export function ServiceEditor({ service }: { service?: Service }) {
-  const [pending, startTransition] = useTransition();
+  const [pending, run, lastResult] = useAdminAction();
+  const formRef = useRef<HTMLFormElement>(null);
   const isNew = !service;
 
   return (
     <form
-      action={upsertService}
-      className="rounded-xl border border-card-border bg-card p-6"
+      ref={formRef}
+      onSubmit={(e) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        run(() => upsertService(formData), {
+          onSuccess: () => {
+            if (isNew) formRef.current?.reset();
+          },
+        });
+      }}
+      aria-busy={pending}
+      className="relative overflow-hidden rounded-xl border border-card-border bg-card p-6"
     >
+      {pending && (
+        <div className="absolute inset-x-0 top-0">
+          <ProgressBar label="Saving service" className="h-1 rounded-none" />
+        </div>
+      )}
       {service && <input type="hidden" name="id" value={service.id} />}
 
       <div className="flex items-center justify-between">
@@ -37,7 +56,11 @@ export function ServiceEditor({ service }: { service?: Service }) {
           <button
             type="button"
             disabled={pending}
-            onClick={() => startTransition(() => deleteService(service!.id))}
+            onClick={() => {
+              if (confirm(`Delete "${service!.title}"? This can't be undone.`)) {
+                run(() => deleteService(service!.id));
+              }
+            }}
             className="text-xs font-medium text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300 disabled:opacity-60"
           >
             Delete
@@ -135,12 +158,16 @@ export function ServiceEditor({ service }: { service?: Service }) {
         </div>
       </div>
 
-      <button
-        type="submit"
-        className="btn-fade mt-5 rounded-lg px-5 py-2 text-sm font-semibold"
-      >
-        {isNew ? "Add Service" : "Save Changes"}
-      </button>
+      <div className="mt-5 flex flex-wrap items-center gap-4">
+        <button
+          type="submit"
+          disabled={pending}
+          className="btn-fade rounded-lg px-5 py-2 text-sm font-semibold disabled:opacity-60"
+        >
+          {pending ? "Saving..." : isNew ? "Add Service" : "Save Changes"}
+        </button>
+        <ActionStatus result={lastResult} />
+      </div>
     </form>
   );
 }
