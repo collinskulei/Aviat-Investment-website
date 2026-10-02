@@ -10,8 +10,10 @@ export type MagicLinkState = {
   message: string | null;
 };
 
-const GENERIC_SENT_MESSAGE =
-  "If that email has admin access, a sign-in link is on its way. Check your inbox.";
+const SENT_MESSAGE = "A sign-in link is on its way. Check your inbox.";
+
+const NO_ACCESS_MESSAGE =
+  "Your email has no access to the dashboard. Please contact your administrator.";
 
 export async function sendMagicLink(
   _prevState: MagicLinkState,
@@ -45,12 +47,32 @@ export async function sendMagicLink(
   });
 
   if (error) {
-    console.error("[login] Supabase signInWithOtp error:", error.status, error.message);
+    console.error("[login] Supabase signInWithOtp error:", error.status, error.code, error.message);
+
+    // With shouldCreateUser: false, Supabase refuses emails that have no account.
+    const noAccess =
+      error.code === "otp_disabled" ||
+      error.code === "signup_disabled" ||
+      error.code === "user_not_found" ||
+      /signups not allowed/i.test(error.message);
+    if (noAccess) {
+      return { status: "error", message: NO_ACCESS_MESSAGE };
+    }
+
+    if (error.status === 429 || error.code?.startsWith("over_")) {
+      return {
+        status: "error",
+        message: "Too many sign-in requests. Please wait a few minutes and try again.",
+      };
+    }
+
+    return {
+      status: "error",
+      message: "We couldn't send a sign-in link right now. Please try again shortly.",
+    };
   }
 
-  // Same message whether or not the email exists, so visitors can't probe
-  // for which addresses have admin access.
-  return { status: "success", message: GENERIC_SENT_MESSAGE };
+  return { status: "success", message: SENT_MESSAGE };
 }
 
 export async function logout() {

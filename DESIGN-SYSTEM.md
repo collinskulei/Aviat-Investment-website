@@ -372,11 +372,11 @@ Admin sign-in is passwordless: `/aviat-admin` is a single email field that
 calls `supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: false,
 emailRedirectTo } })`. `shouldCreateUser: false` matters - there is no public
 sign-up, so a magic link only works for an email that already has an account
-created directly in the Supabase dashboard. The success message is identical
-whether or not the email actually has an account, so the form can't be used to
-probe which addresses are admins:
+created directly in the Supabase dashboard. When Supabase refuses an email
+with no account, the form says so explicitly (a deliberate choice: clearer for
+staff, at the cost of revealing which addresses are admins):
 ```tsx
-return { status: "success", message: GENERIC_SENT_MESSAGE };
+return { status: "error", message: NO_ACCESS_MESSAGE };
 ```
 Clicking the emailed link lands on a Route Handler (`/auth/callback`) that
 exchanges the one-time code for a session via the same cookie-aware server
