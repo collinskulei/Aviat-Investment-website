@@ -61,12 +61,14 @@ until it's connected.
    (any password works since it's never used - sign-in is by magic link).
    There is no public sign-up - only accounts created here can access
    `/admin-dashboard`.
-5. **Authentication -> URL Configuration**, add `/auth/callback` to both:
-   - **Site URL** (e.g. `https://your-domain.com`)
-   - **Redirect URLs** (add both `http://localhost:3000/auth/callback` for local
-     dev and `https://your-domain.com/auth/callback` for production)
+5. **Authentication -> URL Configuration**:
+   - **Site URL**: your production domain, e.g. `https://your-domain.com`
+   - **Redirect URLs**: add `http://localhost:3000/**` for local dev and
+     `https://your-domain.com/**` for production
 
-   Magic links are rejected if their redirect URL isn't on this allowlist.
+   The magic link redirects to `/auth/callback?next=...`; the `**` wildcard is
+   needed so that query string still matches. If the redirect URL isn't on this
+   allowlist, Supabase silently falls back to the Site URL instead.
 6. Supabase's built-in email sending (used for magic links) is rate-limited to a
    few emails per hour on the free tier - fine for a small admin team, but
    configure a custom SMTP provider under **Project Settings -> Auth** if you

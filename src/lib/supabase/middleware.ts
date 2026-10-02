@@ -10,6 +10,15 @@ const ADMIN_LOGIN_PATH = "/aviat-admin";
  * gates everything under /admin-dashboard behind the /aviat-admin login.
  */
 export async function updateSession(request: NextRequest) {
+  // If Supabase rejects the emailRedirectTo URL it falls back to the Site URL,
+  // landing the magic link on "/?code=...". Hand that code to the callback.
+  const code = request.nextUrl.searchParams.get("code");
+  if (code && request.nextUrl.pathname === "/") {
+    const callbackUrl = request.nextUrl.clone();
+    callbackUrl.pathname = "/auth/callback";
+    return NextResponse.redirect(callbackUrl);
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   if (!isSupabaseConfigured) {
