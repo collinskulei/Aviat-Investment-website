@@ -55,7 +55,12 @@ export default async function ContactPage({
             <div className="rounded-xl border border-card-border bg-card p-6">
               <Mail className="size-6 text-primary" aria-hidden="true" />
               <h3 className="mt-3 font-semibold">Email</h3>
-              <p className="mt-1 text-sm text-muted">{siteContent.contact_email}</p>
+              <a
+                href={`mailto:${siteContent.contact_email}`}
+                className="mt-1 block break-all text-sm text-muted hover:text-primary"
+              >
+                {siteContent.contact_email}
+              </a>
             </div>
           </div>
 

@@ -19,7 +19,7 @@ export const SEED_SITE_CONTENT: SiteContent = {
     "To deliver precise, dependable maintenance for aviation safety equipment, giving operators confidence in every takeoff, and every landing.",
   about_image_url: "/images/about-component-detail.jpg",
   contact_phone: "[PHONE NUMBER]",
-  contact_email: "[EMAIL ADDRESS]",
+  contact_email: "info@aviatinvestment.co.ke",
   contact_address: "[STREET ADDRESS], Wilson Airport, Nairobi, Kenya",
   contact_hours: "[BUSINESS HOURS]",
   updated_at: "",

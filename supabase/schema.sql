@@ -210,9 +210,15 @@ values (
   'Trusted expertise located at Wilson Airport.',
   E'Aviat Investment Limited is an aviation component maintenance company operating out of Wilson Airport, near Parapet. We focus exclusively on the critical safety equipment that keeps aircraft and crews protected: batteries, life vests, emergency power packs, locator beacons, and pressure vessels.\n\nOur team combines hands-on technical expertise with rigorous, standards-driven processes, so operators can trust that every component we touch meets the demands of real-world flight operations.',
   'To deliver precise, dependable maintenance for aviation safety equipment, giving operators confidence in every takeoff, and every landing.',
-  '[PHONE NUMBER]', '[EMAIL ADDRESS]', '[STREET ADDRESS], Wilson Airport, Nairobi, Kenya', '[BUSINESS HOURS]'
+  '[PHONE NUMBER]', 'info@aviatinvestment.co.ke', '[STREET ADDRESS], Wilson Airport, Nairobi, Kenya', '[BUSINESS HOURS]'
 )
 on conflict (id) do nothing;
+
+-- Company email. Only replaces the original placeholder, so an address
+-- edited from the dashboard is never overwritten.
+update public.site_content
+set contact_email = 'info@aviatinvestment.co.ke'
+where id = 'default' and contact_email in ('', '[EMAIL ADDRESS]');
 
 -- ---------------------------------------------------------------------------
 -- why_choose_us: the three cards on Home/About, editable from the admin.

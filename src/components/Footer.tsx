@@ -43,7 +43,11 @@ export function Footer({ siteContent }: { siteContent: SiteContent }) {
           <ul className="mt-3 space-y-2 text-sm text-zinc-400">
             <li>{siteContent.contact_address}</li>
             <li>{siteContent.contact_phone}</li>
-            <li>{siteContent.contact_email}</li>
+            <li>
+              <a href={`mailto:${siteContent.contact_email}`} className="break-all hover:text-white">
+                {siteContent.contact_email}
+              </a>
+            </li>
           </ul>
         </div>
       </div>
