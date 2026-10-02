@@ -4,6 +4,8 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { PublicOnly } from "@/components/PublicOnly";
+import { ZoomReveal } from "@/components/ZoomReveal";
 import { getSiteContent } from "@/lib/data/site-content";
 
 const geistSans = Geist({
@@ -47,7 +49,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         >
           <Header logoUrl={siteContent.logo_url} />
           <main className="flex-1">{children}</main>
-          <Footer siteContent={siteContent} />
+          <PublicOnly>
+            <Footer siteContent={siteContent} />
+          </PublicOnly>
+          <ZoomReveal />
         </ThemeProvider>
       </body>
     </html>

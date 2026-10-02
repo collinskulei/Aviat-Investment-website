@@ -138,3 +138,29 @@ body {
     animation-duration: 3s;
   }
 }
+
+/* Zoom-in entrance for public-site content, driven by ZoomReveal. */
+@keyframes zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.zoom-pending {
+  opacity: 0;
+}
+.zoom-in {
+  animation: zoom-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .zoom-pending {
+    opacity: 1;
+  }
+  .zoom-in {
+    animation: none;
+  }
+}
